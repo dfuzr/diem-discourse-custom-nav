@@ -1,10 +1,17 @@
 <script type="text/discourse-plugin" version="0.8.20">
   const customHeaderLinks = settings.Custom_header_links;
+  const groups = api.getCurrentUser().groups;
+  var isMember = false;
+  
+  if (groups.filter(function(g) { return g.name === 'members'; }).length > 0) {
+    isMember = true;
+  }
 
   if (!customHeaderLinks.length) return;
 
   const h = require("virtual-dom").h;
-  const headerLinks = [];
+  const memberLinks = [];
+  const publicLinks = [];
 
   customHeaderLinks.split("|").map(i => {
     const seg = $.map(i.split(","), $.trim);
@@ -15,59 +22,71 @@
     const linkTarget = seg[4] === "self" ? "" : "_blank";
     const keepOnScrollClass = seg[5] === "keep" ? ".keep" : "";
     const linkClass = `.${linkText.trim().toLowerCase().replace(/\s/gi, '-')}`;
-
-    if (!linkTarget) {
-      headerLinks.push(
-        h(
-          `li${userClass}${keepOnScrollClass}${linkClass}`,
-          h(
-            "a.nav-link",
-            {
-              title: linkTitle,
-              href: linkHref
-            },
-            linkText
-          )
-        )
-      );
+    
+    if (userClass === '.members' || userClass === '.both') {
+        memberLinks.push(
+            h(
+              `li${userClass}${keepOnScrollClass}${linkClass}`,
+              h(
+                "a.nav-link",
+                {
+                  title: linkTitle,
+                  href: linkHref,
+                  target: linkTarget
+                },
+                linkText
+              )
+            )
+        );
     } else {
-      headerLinks.push(
-        h(
-          `li${userClass}${keepOnScrollClass}${linkClass}`,
-          h(
-            "a.nav-link",
-            {
-              title: linkTitle,
-              href: linkHref,
-              target: linkTarget
-            },
-            linkText
-          )
-        )
-      );
+        publicLinks.push(
+            h(
+              `li${userClass}${keepOnScrollClass}${linkClass}`,
+              h(
+                "a.nav-link",
+                {
+                  title: linkTitle,
+                  href: linkHref,
+                  target: linkTarget
+                },
+                linkText
+              )
+            )
+        );
     }
   });
+  
+  console.log(memberLinks, publicLinks)
 
   api.decorateWidget("header-buttons:before", helper => {
-    return helper.h(
-      'ul.nav-link-container', [
-          helper.h('li.nav-link-title.members', [
-            helper.h('a.nav-link', {
-                href:'/c/member-portal', 
-                text:'Member Portal',
-                target:'_self'
-            }) 
-          ]),
-          helper.h('li.nav-link-title.public', [
-            helper.h('a.nav-link', {
-                href:'/', 
-                text:'Developers',
-                target:'_self'
-            }) 
-          ]),
-          headerLinks
-      ]
-    );
+      if (isMember) {
+       return helper.h(
+          'ul.nav-link-container', [
+              helper.h('li.nav-link-title.members', [
+                helper.h('a.nav-link', {
+                    href:'/c/member-portal', 
+                    text:'Member Portal',
+                    target:'_self'
+                }) 
+              ]),
+              memberLinks
+          ]
+        );   
+      } 
+      else {
+        return helper.h(
+          'ul.nav-link-container', [
+              helper.h('li.nav-link-title.public', [
+                helper.h('a.nav-link', {
+                    href:'/', 
+                    text:'Developers',
+                    target:'_self'
+                }) 
+              ]),
+              publicLinks
+          ]
+        ); 
+      }
   });
 
   api.decorateWidget("home-logo:after", helper => {
@@ -78,4 +97,5 @@
       $(".d-header").removeClass("hide-menus");
     }
   });
+
 </script>
