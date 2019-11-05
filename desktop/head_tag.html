@@ -38,31 +38,34 @@
 		$(window).on('resize load',function(){
 			calcWidth();
 		});
+
+
+
+
+		// Observe header for changes to recalculate width
+
+		var targetNodes         = $(".d-header");
+		var MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
+		var myObserver          = new MutationObserver (mutationHandler);
+		var obsConfig           = { childList: false, characterData: false, attributes: true, subtree: false };
+
+		//--- Add a target node to the observer. Can only add one node at a time.
+		targetNodes.each ( function () {
+				myObserver.observe (this, obsConfig);
+		} );
+
+		function mutationHandler (mutationRecords) {
+				console.info ("mutationHandler:");
+
+				mutationRecords.forEach ( function (mutation) {
+						console.log (mutation);
+
+						if (typeof mutation.attributeName == "class") {
+							calcWidth();
+						}
+				} );
+		}
+
+
 	});
-
-
-	// Observe header for changes to recalculate width
-
-	var targetNodes         = $(".d-header");
-	var MutationObserver    = window.MutationObserver || window.WebKitMutationObserver;
-	var myObserver          = new MutationObserver (mutationHandler);
-	var obsConfig           = { childList: false, characterData: false, attributes: true, subtree: false };
-
-	//--- Add a target node to the observer. Can only add one node at a time.
-	targetNodes.each ( function () {
-			myObserver.observe (this, obsConfig);
-	} );
-
-	function mutationHandler (mutationRecords) {
-			console.info ("mutationHandler:");
-
-			mutationRecords.forEach ( function (mutation) {
-					console.log (mutation);
-
-					if (typeof mutation.attributeName == "class") {
-						calcWidth();
-					}
-			} );
-	}
-
 </script>
