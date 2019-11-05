@@ -9,7 +9,7 @@
   
   #site-logo {
     height: 1.667em;
-    margin-right: 4rem;
+    margin-right: 2rem;
   }
 
   .wrap {
@@ -20,6 +20,7 @@
 
   .panel {
     flex: 1 0 auto;
+    margin-left: 0;
   }
 
   .header-buttons {
@@ -32,9 +33,17 @@
   font-size: 1rem;
 }
 
+.d-header-icons {
+  flex: 0 0 auto;
+}
 
 .badge-wrapper.box span.badge-category {
   padding: 0 6px 2px;
+}
+
+// Extra info
+.extra-info-wrapper {
+  overflow: visible;
 }
 
 
@@ -58,7 +67,7 @@
   margin: 0;
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   list-style: none;
 
   .calendar {

@@ -30,7 +30,8 @@
 			}
 		}
 		
-		$('.nav-link-container .more').on('click', function() {
+		$('.nav-link-container .more').on('click', function(e) {
+			e.preventDefault();
 			$('.nav-link-container .more').toggleClass('visible');
 		});
 
