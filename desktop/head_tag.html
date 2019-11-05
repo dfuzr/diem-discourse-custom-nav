@@ -33,6 +33,7 @@
 		$('.nav-link-container .more').on('click', function(e) {
 			e.preventDefault();
 			$('.nav-link-container .more').toggleClass('visible');
+			return false;
 		});
 
 		$(window).on('resize load',function(){
