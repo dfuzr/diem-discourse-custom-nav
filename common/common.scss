@@ -19,7 +19,7 @@
   }
 
   .panel {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     margin-left: 0;
     justify-content: flex-end;
   }
@@ -58,6 +58,7 @@
 
 
 .nav-link-container {
+  visibility: visible;
   position: relative;
   margin: 0;
   display: flex;
@@ -145,7 +146,7 @@
 
 .d-header.hide-menus {
   .nav-link-container {
-    display: none;
+    visibility: hidden;
   }
 }
 .extra-info-wrapper {
