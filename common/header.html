@@ -1,72 +1,65 @@
-<script type="text/discourse-plugin" version="0.8">
+<script type="text/discourse-plugin" version="0.8.20">
+  const customHeaderLinks = settings.Custom_header_links;
 
-  // A mapping of the category ID to the topic metadata
-  const categoryMap = {
-    5: {
-      name: 'Event Calendar',
-      hasNetworkHeader: true,
-      description: 'Calendar: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
-    },
-    6: {
-      name: 'Milestones',
-      hasNetworkHeader: true,
-      description: 'Milestones: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
-    },
-    8: {
-      name: 'Association Updates',
-      hasNetworkHeader: true,
-      description: 'Updates: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'
-    },
-  };
+  if (!customHeaderLinks.length) return;
 
-  api.registerConnectorClass('topic-above-post-stream', 'libra-post-header', {
-    setupComponent(args, component) {
-      if (!args.model.category) {
-        return;
-      }
-      const data = categoryMap[args.model.category.id];
-      if (data) {
-        component.set('hasNetworkHeader', data.hasNetworkHeader)
-      }
+  const h = require("virtual-dom").h;
+  const headerLinks = [];
+
+  customHeaderLinks.split("|").map(i => {
+    const seg = $.map(i.split(","), $.trim);
+    const linkText = seg[0];
+    const linkTitle = seg[1];
+    const linkHref = seg[2];
+    const deviceClass = `.${seg[3]}`;
+    const linkTarget = seg[4] === "self" ? "" : "_blank";
+    const keepOnScrollClass = seg[5] === "keep" ? ".keep" : "";
+    const linkClass = `.${linkText.trim().toLowerCase().replace(/\s/gi, '-')}`;
+
+    if (!linkTarget) {
+      headerLinks.push(
+        h(
+          `li.nav-link-title${deviceClass}${keepOnScrollClass}${linkClass}`,
+          h(
+            "a.nav-link",
+            {
+              title: linkTitle,
+              href: linkHref
+            },
+            linkText
+          )
+        )
+      );
+    } else {
+      headerLinks.push(
+        h(
+          `li.nav-link-title${deviceClass}${keepOnScrollClass}${linkClass}`,
+          h(
+            "a.nav-link",
+            {
+              title: linkTitle,
+              href: linkHref,
+              target: linkTarget
+            },
+            linkText
+          )
+        )
+      );
     }
   });
 
-  api.registerConnectorClass('topic-title', 'libra-post-topic', {
-    setupComponent(args, component) {
-      if (!args.model.category) {
-        return;
-      }
-      const data = categoryMap[args.model.category.id];
-      if (data) {
-        console.log('Adding Event Calendar')
-        component.set('headerDescription', data.description)
-      }
+  api.decorateWidget("header-buttons:before", helper => {
+    return helper.h(
+      "ul.nav-link-container", headerLinks
+    );
+  });
+
+  api.decorateWidget("home-logo:after", helper => {
+    let titleVisible = helper.attrs.minimized;
+    if (titleVisible) {
+      $(".d-header").addClass("hide-menus");
+    } else {
+      $(".d-header").removeClass("hide-menus");
     }
   });
-</script>
-
-<script
-  type="text/x-handlebars"
-  data-template-name="/connectors/topic-above-post-stream/libra-post-header"
->
-  {{#if hasNetworkHeader}}
-    <div class="topic-header-hero">
-      <div class="above-topic-image-wrapper">
-        <img class="above-topic-image" src="https://libra.org/wp-content/uploads/2019/10/network@2x.png" />
-      </div>
-    </div>
-  {{/if}}
-</script>
-
-<script
-  type="text/x-handlebars"
-  data-template-name="/connectors/topic-title/libra-post-topic"
->
-  {{#if headerDescription}}
-    <div class="topic-header-hero">
-      <div class="post-title-description">
-        {{ headerDescription }}
-      </div>
-    </div>
-  {{/if}}
 </script>
