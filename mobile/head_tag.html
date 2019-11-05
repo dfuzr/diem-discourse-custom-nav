@@ -1,10 +1,10 @@
 <script>
 	$(document).ready(function() {
 		
-		$('.title').preprend('<button>menu</button>');
+		$('.d-header .title').prepend('<button class="nav-link-trigger"><i class="fa fa-caret-down"></i></button>');
 		
-		$('.nav-link-container .more').on('click', function() {
-			$('.nav-link-container .more').toggleClass('visible');
+		$('.nav-link-trigger').on('click', function() {
+			$('.nav-link-container').toggleClass('visible');
 		});
 
 	});

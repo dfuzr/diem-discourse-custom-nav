@@ -1,31 +1,67 @@
 @import "common/foundation/variables";
 @import "theme_variables";
 
+
+.d-header {
+
+  #site-logo {
+   margin: 0 auto;
+  }
+
+  .panel {
+    flex: 0 0 auto;
+  }
+
+	.title {
+    flex: 1 1 auto;
+		display: flex;
+		justify-content: space-between;
+
+		> a {
+			text-align: center;
+		}
+  }
+
+  .header-buttons {
+    flex: 1 1 auto;
+  }
+}
+
+.nav-link-trigger {
+	color: $header-primary;
+}
+
+
 .nav-link-container {
-		display: none;
-		position: fixed;
-		top: 4rem;
-		left: 0;
-		width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    background-color: #EEF3F6;
-    
-    li {
-        display: block;
-        float: none;
-        text-align: left;
-        padding: 0.5em 1em;
-     }
-      
-    li a {
-        color: #546478;
-        text-align: left;
-    }
-    
-    .nav-link-title {
-        padding-left: 0;
-        font-size: 2rem;
-    }
+	display: none;
+	position: fixed;
+	top: 4rem;
+	left: 0;
+	width: 100%;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-start;
+	background-color: #EEF3F6;
+	padding: 0 2rem 2rem 2rem;
+	
+	li {
+		display: block;
+		float: none;
+		text-align: left;
+		padding: 0.5em 1em;
+	}
+		
+	li a {
+		color: #546478;
+		text-align: left;
+	}
+	
+	.nav-link-title {
+		padding-left: 0;
+		font-size: 2rem;
+	}
+
+	&.visible {
+		display: block;
+	}
 }
