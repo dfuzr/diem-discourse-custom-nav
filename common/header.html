@@ -1,4 +1,6 @@
 <script type="text/discourse-plugin" version="0.8.20">
+  const { iconNode } = require("discourse-common/lib/icon-library");
+
   const customHeaderLinks = settings.Custom_header_links;
   const groups = api.getCurrentUser().groups;
   var isMember = false;
@@ -72,7 +74,7 @@
                 helper.h('a.nav-link', {
                     href:'#', 
                     text:'More',
-                }),
+                }, iconNode('angle-down')),
                 helper.h('ul'),
               ]),
           ]
@@ -93,7 +95,7 @@
                 helper.h('a.nav-link', {
                     href:'#', 
                     text:'More',
-                }),
+                }, iconNode('angle-down')),
                 helper.h('ul'),
               ]),
           ]
