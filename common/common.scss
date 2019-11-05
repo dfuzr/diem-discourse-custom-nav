@@ -63,6 +63,7 @@
     text-align: center;
     padding: 0 1em;
     flex: 0 0 auto;
+    float: left;
     
     &.nav-link-title {
       span {
@@ -90,16 +91,50 @@
       font-weight: light;
     }
     
+    &.hidden {
+      display: none;
+    }
+    
     &.more {
-      position: absolute;
-      right: 0;
-      display: inline-block;
-      color: $header-primary;
-      text-decoration: none;
-      text-align: center;
-      line-height: 1em;
-      font-size: 1rem;
-      font-weight: light;
+      position: relative;
+      
+      &:after {
+        content: '\2304';
+        display: inline;
+        vertical-align: middle;
+        color: #fff;
+      }
+      
+      ul {
+          display: none;
+          position: absolute;
+          top: calc(100% + 2em);
+          right: 0;
+          width: 200%;
+          list-style: none;
+          text-align: left;
+          background-color: #EEF3F6;
+          padding: 1rem;
+          margin: 0;
+          
+          li {
+              display: block;
+              float: none;
+              text-align: left;
+              padding: 0.5em 0;
+          }
+          
+          li a {
+              color: #546478;
+              text-align: left;
+          }
+      }
+      
+      &:hover {
+          ul {
+              display: block;
+          }
+      }
     }
   }
 }

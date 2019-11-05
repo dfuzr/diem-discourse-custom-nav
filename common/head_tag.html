@@ -1,0 +1,41 @@
+<script>
+    $(document).ready(function() {
+	
+	function calcWidth() {
+		var navwidth = 0;
+		var morewidth = $('.nav-link-container .more').outerWidth(true);
+		$('.nav-link-container > li:not(.more)').each(function() {
+			navwidth += $(this).outerWidth( true );
+		});
+		
+		var availablespace = $('.header-buttons').width() - morewidth;
+
+		if (navwidth > availablespace) {
+			var lastItem = $('.nav-link-container > li:not(.more)').last();
+			lastItem.attr('data-width', lastItem.outerWidth(true));
+			lastItem.prependTo($('.nav-link-container .more ul'));
+			calcWidth();
+		} else {
+			
+		var firstMoreElement = $('.nav-link-container li.more li').first();
+		if (navwidth + firstMoreElement.data('width') < availablespace) {
+			firstMoreElement.insertBefore($('.nav-link-container .more'));
+		}
+	}
+	  
+	if ($('.nav-link-container .more li').length > 0) {
+		$('.nav-link-container .more').css('display','block');
+		} else {
+			$('.nav-link-container .more').css('display','none');
+		}
+	}
+	
+	$('.nav-link-container .more').on('click', function() {
+	   $('.nav-link-container .more ul').css('display', 'block');
+	});
+
+	$(window).on('resize load',function(){
+		calcWidth();
+	});
+});
+</script>

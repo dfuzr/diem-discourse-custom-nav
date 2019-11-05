@@ -69,7 +69,14 @@
                     target:'_self'
                 }) 
               ]),
-              memberLinks
+              memberLinks,
+              helper.h('li.more', [
+                helper.h('a.nav-link', {
+                    href:'#', 
+                    text:'More',
+                }),
+                helper.h('ul'),
+              ]),
           ]
         );   
       } 
@@ -83,7 +90,14 @@
                     target:'_self'
                 }) 
               ]),
-              publicLinks
+              publicLinks,
+              helper.h('li.more', [
+                helper.h('a.nav-link', {
+                    href:'#', 
+                    text:'More',
+                }),
+                helper.h('ul'),
+              ]),
           ]
         ); 
       }
