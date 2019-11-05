@@ -21,6 +21,7 @@
   .panel {
     flex: 1 0 auto;
     margin-left: 0;
+    justify-content: flex-end;
   }
 
   .header-buttons {
@@ -40,12 +41,6 @@
 .badge-wrapper.box span.badge-category {
   padding: 0 6px 2px;
 }
-
-// Extra info
-.extra-info-wrapper {
-  overflow: visible;
-}
-
 
 // header links
 .mobile-view .hidden-for-mobile { 
@@ -144,4 +139,15 @@
       }
     }
   }
+}
+
+// Extra info
+
+.d-header.hide-menus {
+  .header-buttons {
+    display: none;
+  }
+}
+.extra-info-wrapper {
+  overflow: visible;
 }
