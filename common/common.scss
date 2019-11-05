@@ -48,7 +48,8 @@
 
 .nav-link-trigger {
 	color: $header-primary;
-  width: auto;
+  width: auto !important;
+  display: none;
 }
 
 
