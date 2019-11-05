@@ -97,14 +97,7 @@
     
     &.more {
       position: relative;
-      
-      &:after {
-        content: '\2304';
-        display: inline;
-        vertical-align: middle;
-        color: $header-primary;
-      }
-      
+
       ul {
           display: none;
           position: absolute;
@@ -137,9 +130,4 @@
       }
     }
   }
-}
-
-
-@media screen and (max-width: 940px) {
-    
 }
