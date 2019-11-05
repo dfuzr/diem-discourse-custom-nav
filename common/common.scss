@@ -46,6 +46,10 @@
   margin-left: 0 !important;
 }
 
+.nav-link-trigger {
+	color: $header-primary;
+}
+
 
 .nav-link-container {
   position: relative;
@@ -101,7 +105,7 @@
       ul {
           display: none;
           position: absolute;
-          top: calc(100% + 2em);
+          top: calc(100% + 1.35em);
           right: 0;
           width: 200%;
           list-style: none;

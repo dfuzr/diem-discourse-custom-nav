@@ -112,4 +112,12 @@
     }
   });
 
+  api.decorateWidget("home-logo:before", helper => {
+    return helper.h(
+      'span.nav-link-trigger', [
+        helper.h(iconNode('ellipsis-v'))
+      ]
+    )
+  });
+
 </script>
