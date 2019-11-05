@@ -31,7 +31,7 @@
 		}
 		
 		$('.nav-link-container .more').on('click', function() {
-			$('.nav-link-container .more ul').css('display', 'block');
+			$('.nav-link-container .more').toggleClass('visible');
 		});
 
 		$(window).on('resize load',function(){
