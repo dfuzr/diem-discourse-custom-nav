@@ -60,6 +60,10 @@
 	.nav-link-title {
 		padding-left: 0;
 		font-size: 2rem;
+		
+		a {
+			font-weight: 600;
+		}
 	}
 
 	&.visible {

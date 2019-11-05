@@ -72,9 +72,8 @@
     float: left;
     
     &.nav-link-title {
-      span {
-        color: $header-primary;
-        font-weight: 600;
+      a {
+        font-weight: 400;
       }
       
       &:after {
