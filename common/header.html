@@ -114,7 +114,10 @@
   });
 
   api.decorateWidget("home-logo:before", helper => {
-    return helper.h('span.nav-link-trigger', iconNode('ellipsis-v'));
+    return helper.h('span.nav-link-trigger', [
+        iconNode('ellipsis-v'),
+        iconNode('times')
+    ]);
   });
 
 </script>

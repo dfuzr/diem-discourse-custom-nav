@@ -38,6 +38,7 @@
 		$('.nav-link-trigger').on('click', function(e) {
 			e.preventDefault();
 			$('.nav-link-container').toggleClass('visible');
+			$('.nav-link-trigger').toggleClass('open');
 		});
 
 		$(window).on('resize load',function(){

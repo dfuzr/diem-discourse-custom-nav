@@ -181,6 +181,20 @@
   
   .nav-link-trigger {
     display: block;
+    .d-icon-ellipsis-v {
+        display: block;
+    }
+    .d-icon-times {
+        display: none;
+    }
+    &.open {
+        .d-icon-ellipsis-v {
+            display: none;
+        }
+        .d-icon-times {
+            display: block;
+        }
+    }
   }
 
   .nav-link-container {
