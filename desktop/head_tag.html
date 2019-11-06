@@ -1,35 +1,34 @@
 <script>
-	$(document).ready(function() {
+	function calcWidth() {
+		var navwidth = 0;
+		var morewidth = $('.nav-link-container .more').outerWidth(true);
+		$('.nav-link-container > li:not(.more)').each(function() {
+			navwidth += $(this).outerWidth( true );
+		});
 		
-		function calcWidth() {
-			var navwidth = 0;
-			var morewidth = $('.nav-link-container .more').outerWidth(true);
-			$('.nav-link-container > li:not(.more)').each(function() {
-				navwidth += $(this).outerWidth( true );
-			});
-			
-			var availablespace = $('.header-buttons').width() - morewidth;
+		var availablespace = $('.header-buttons').width() - morewidth;
 
-			if (navwidth > availablespace) {
-				var lastItem = $('.nav-link-container > li:not(.more)').last();
-				lastItem.attr('data-width', lastItem.outerWidth(true));
-				lastItem.prependTo($('.nav-link-container .more ul'));
-				calcWidth();
-			} else {
-				
+		if (navwidth > availablespace) {
+			var lastItem = $('.nav-link-container > li:not(.more)').last();
+			lastItem.attr('data-width', lastItem.outerWidth(true));
+			lastItem.prependTo($('.nav-link-container .more ul'));
+			calcWidth();
+		} 
+		else {
 			var firstMoreElement = $('.nav-link-container li.more li').first();
 			if (navwidth + firstMoreElement.data('width') < availablespace) {
 				firstMoreElement.insertBefore($('.nav-link-container .more'));
 			}
 		}
-			
+		
 		if ($('.nav-link-container .more li').length > 0) {
 			$('.nav-link-container .more').css('display','block');
-			} else {
-				$('.nav-link-container .more').css('display','none');
-			}
+		} 
+		else {
+			$('.nav-link-container .more').css('display','none');
 		}
-		
+	}
+	$(document).ready(function() {
 		$('body').on('click','.nav-link-container li.more',function(){
 			$('.nav-link-container .more').toggleClass('visible');
 		});
