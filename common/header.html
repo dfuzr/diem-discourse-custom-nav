@@ -108,16 +108,13 @@
     } else {
       $(".d-header").removeClass("hide-menus");
       if ($(window).width() > 600) {
-        calcWidth();
+        var calcTimeout = setTimeout(calcWidth, 50);
       }
     }
   });
 
   api.decorateWidget("home-logo:before", helper => {
-    return helper.h('a.nav-link-trigger', {
-      href:'#', 
-      text: ''
-    }, iconNode('ellipsis-v'))
+    return helper.h('span.nav-link-trigger', iconNode('ellipsis-v'));
   });
 
 </script>

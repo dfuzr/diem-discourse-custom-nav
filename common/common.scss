@@ -51,8 +51,9 @@
 }
 
 .nav-link-trigger {
-	color: $header-primary;
+  color: $header-primary;
   width: auto !important;
+  margin-right: 1rem;
   display: none;
 }
 
@@ -63,7 +64,7 @@
   margin: 0;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   list-style: none;
 
   .calendar {
@@ -75,6 +76,7 @@
     padding: 0 1em;
     flex: 0 0 auto;
     float: left;
+    animation: fadein 0.5s;
     
     &.nav-link-title {
       a {
@@ -146,7 +148,7 @@
 
 .d-header.hide-menus {
   .nav-link-container {
-    visibility: hidden;
+    display: none;
   }
 }
 .extra-info-wrapper {
@@ -164,17 +166,12 @@
     }
   
     .panel {
-      flex: 0 0 auto;
+      flex: 1 0 auto;
     }
   
     .title {
       flex: 1 1 auto;
       display: flex;
-      justify-content: space-between;
-  
-      > a {
-        text-align: center;
-      }
     }
   
     .header-buttons {
@@ -257,8 +254,8 @@
   }
       
   .d-header.hide-menus {
-    .nav-link-container {
-      visibility: visible;
+    .nav-link-container.visible {
+      display: block;
     }
   }
 }
