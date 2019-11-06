@@ -107,6 +107,9 @@
       $(".d-header").addClass("hide-menus");
     } else {
       $(".d-header").removeClass("hide-menus");
+      if ($(window).width() > 600) {
+        calcWidth();
+      }
     }
   });
 

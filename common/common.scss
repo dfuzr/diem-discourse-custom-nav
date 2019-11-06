@@ -152,3 +152,124 @@
 .extra-info-wrapper {
   overflow: visible;
 }
+
+
+
+
+@media screen and (max-width: 600px) {
+  .d-header {
+  
+    #site-logo {
+      margin: 0 auto;
+    }
+  
+    .panel {
+      flex: 0 0 auto;
+    }
+  
+    .title {
+      flex: 1 1 auto;
+      display: flex;
+      justify-content: space-between;
+  
+      > a {
+        text-align: center;
+      }
+    }
+  
+    .header-buttons {
+      flex: 1 1 auto;
+    }
+  }
+  
+  .nav-link-trigger {
+    display: block;
+  }
+
+  .nav-link-container {
+    display: none;
+    position: fixed;
+    top: 4rem;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: #EEF3F6;
+    padding: 0 2rem 2rem 2rem;
+    transition: all 0.2s;
+    
+    li {
+      display: block;
+      float: none;
+      text-align: left;
+      padding: 0.5rem 1rem;
+    }
+      
+    li a {
+      color: #546478;
+      text-align: left;
+      font-weight: 400;
+    }
+    .nav-link-title {
+      padding-left: 0;
+      font-size: 2rem;
+      
+      a {
+        font-weight: 600 !important;
+        font-size: 1.3rem;
+  
+        &:after {
+          display: none;
+        }
+      }
+    }
+  
+    &.visible {
+      display: block;
+      animation: slideIn 0.5s ease-in-out;
+    }
+  
+    .more {
+      > .nav-link {
+        display: none !important;
+      }
+        
+      ul {
+        display: block;
+        position: relative;
+        top: 0;
+        right: auto;
+        width: 100%;
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+    
+  .extra-info-wrapper + .panel {
+    .header-buttons,
+    .d-header-icons {
+      display: block !important;
+    }
+  }
+      
+  .d-header.hide-menus {
+    .nav-link-container {
+      visibility: visible;
+    }
+  }
+}
+    
+@keyframes slideIn {
+	from {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}

@@ -7,6 +7,8 @@
 		});
 		
 		var availablespace = $('.header-buttons').width() - morewidth;
+		
+		console.log(availablespace)
 
 		if (navwidth > availablespace) {
 			var lastItem = $('.nav-link-container > li:not(.more)').last();
@@ -32,9 +34,16 @@
 		$('body').on('click','.nav-link-container li.more',function(){
 			$('.nav-link-container .more').toggleClass('visible');
 		});
+		
+		$('.nav-link-trigger').on('click', function(e) {
+			e.preventDefault();
+			$('.nav-link-container').toggleClass('visible');
+		});
 
 		$(window).on('resize load',function(){
-			calcWidth();
+			if ($(window).width() > 600) {
+				calcWidth();   
+			}
 		});
 
 	});
