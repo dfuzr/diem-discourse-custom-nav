@@ -66,10 +66,6 @@
   align-items: center;
   flex-wrap: nowrap;
   list-style: none;
-
-  .calendar {
-    height: auto;
-  }
   
   li { 
     text-align: center;
@@ -144,6 +140,16 @@
           display: block;
         }
       }
+    }
+  }
+  
+  .calendar {
+    height: auto;
+  }
+
+  .public + .community {
+    a {
+      text-decoration: underline;
     }
   }
 }

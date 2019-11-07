@@ -43,13 +43,13 @@
 
 		$(window).on('resize load',function(){
 			if ($(window).width() > 600) {
-				calcWidth();
+			    calcWidth();
 			}
 		});
 		
 		function setActiveNav() {
 			console.log(location.pathname)
-			$('.nav-link-container li a[href^="' + location.pathname + '"]').addClass('active');
+			$('.nav-link-container li a[href="' + location.pathname + '"]').addClass('active');
 		};
 		
 		setActiveNav();
