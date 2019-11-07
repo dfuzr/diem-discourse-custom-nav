@@ -128,4 +128,8 @@
       api.changeWidgetSetting('home-logo', 'href', 'https://developers.libra.org/')
   }
 
+  api.onPageChange(() => {  
+    setActiveNav();
+  });
+
 </script>

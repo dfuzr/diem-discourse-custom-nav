@@ -29,6 +29,11 @@
 		}
 	};
 
+	function setActiveNav() {
+		$('.nav-link-container li a').removeClass('active');
+		$('.nav-link-container li a[href^="' + location.pathname + '"]').addClass('active');
+	};
+
     
 	$(document).ready(function() {
 		$('body').on('click','.nav-link-container li.more',function(){
