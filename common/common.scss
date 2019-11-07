@@ -233,17 +233,18 @@
       text-align: left;
       font-weight: 400;
     }
-    .nav-link-title {
+
+    li.nav-link-title {
       padding-left: 0;
       font-size: 2rem;
       
       a {
         font-weight: 600 !important;
         font-size: 1.3rem;
-  
-        &:after {
-          display: none;
-        }
+      }
+
+      &:after {
+        display: none;
       }
     }
   
@@ -252,7 +253,9 @@
       animation: slideIn 0.5s ease-in-out;
     }
   
-    .more {
+    li.more {
+      padding: 0 1rem;
+      
       > .nav-link {
         display: none !important;
       }
