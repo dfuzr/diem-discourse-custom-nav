@@ -36,6 +36,10 @@
 
     
 	$(document).ready(function() {
+		// Move signup/login btns outside of nav wrapper
+		$('.header-buttons .btn').detach().appendTo('.d-header .panel');
+
+		
 		$('.nav-link-container li.more').on('click', function() {
 			$('.nav-link-container .more').toggleClass('visible');            
 		});
