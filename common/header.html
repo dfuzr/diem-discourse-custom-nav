@@ -127,4 +127,10 @@
     setActiveNav();
   });
 
+  if (isMember) {
+      api.changeWidgetSetting('home-logo', 'href', '/latest');
+  } else {
+      api.changeWidgetSetting('home-logo', 'href', 'https://developers.libra.org/')
+  }
+
 </script>
