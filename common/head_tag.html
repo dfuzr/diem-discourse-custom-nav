@@ -6,7 +6,7 @@
 			navwidth += $(this).outerWidth( true );
 		});
 		
-		var availablespace = $('.header-buttons').width() - morewidth;
+		var availablespace = $('.header-buttons').width() - (morewidth * 1.5);
 
 		if (navwidth > availablespace) {
 			var lastItem = $('.nav-link-container > li:not(.more)').last();
@@ -39,7 +39,7 @@
 		// Move signup/login btns outside of nav wrapper
 		$('.header-buttons .btn').detach().appendTo('.d-header .panel');
 
-		
+
 		$('.nav-link-container li.more').on('click', function() {
 			$('.nav-link-container .more').toggleClass('visible');            
 		});
