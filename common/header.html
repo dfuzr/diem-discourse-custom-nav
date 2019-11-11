@@ -2,7 +2,8 @@
   const { iconNode } = require("discourse-common/lib/icon-library");
 
   const customHeaderLinks = settings.Custom_header_links;
-  const groups = api.getCurrentUser().groups;
+  const user = api.getCurrentUser() || {};
+  const groups = user.groups || [];
   var isMember = false;
   
   if (groups.filter(function(g) { return g.name === 'members'; }).length > 0) {
@@ -86,7 +87,7 @@
           'ul.nav-link-container', [
               helper.h('li.nav-link-title.public', [
                 helper.h('a.nav-link', {
-                    href:'https://developers.libra.org/', 
+                    href:'/', 
                     text:'Developers',
                     target:'_self'
                 }) 
@@ -122,12 +123,6 @@
     ]);
   });
   
-  if (isMember) {
-      api.changeWidgetSetting('home-logo', 'href', '/latest');
-  } else {
-      api.changeWidgetSetting('home-logo', 'href', 'https://developers.libra.org/')
-  }
-
   api.onPageChange(() => {  
     setActiveNav();
   });
