@@ -1,7 +1,7 @@
 <script>
 	function calcWidth() {
 		var navwidth = 0;
-		var morewidth = $('.nav-link-container .more').outerWidth(true);
+		var morewidth = $('.nav-link-container .more').outerWidth(true) + 10;
 		$('.nav-link-container > li:not(.more)').each(function() {
 			navwidth += $(this).outerWidth( true );
 		});
