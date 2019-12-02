@@ -6,7 +6,12 @@
   const groups = user.groups || [];
   var isMember = false;
   
-  if (groups.filter(function(g) { return g.name === 'members'; }).length > 0) {
+  // Use Discourse.SiteSettings instead of hard coded group name "members"
+  const groupsWithAccessToMemberDirectory = [
+    Discourse.SiteSettings.libra_discourse_member_directory_group_name,
+    ...(Discourse.SiteSettings.libra_discourse_member_directory_groups_with_member_directory_access || '').split('|')
+  ].filter(function(groupName) { return groupName.length > 0; });
+  if (groups.filter(function(g) { return groupsWithAccessToMemberDirectory.includes(g.name); }).length > 0) {
     isMember = true;
   }
 
