@@ -16,8 +16,9 @@
 		} 
 		else {
 			var firstMoreElement = $('.nav-link-container li.more li').first();
-			if (navwidth + firstMoreElement.data('width') < availablespace) {
+			while (navwidth + firstMoreElement.data('width') < availablespace && $('.nav-link-container .more li').length > 0) {
 				firstMoreElement.insertBefore($('.nav-link-container .more'));
+				firstMoreElement = $('.nav-link-container li.more li').first();
 			}
 		}
 		
