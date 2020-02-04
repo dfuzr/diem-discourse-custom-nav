@@ -22,13 +22,10 @@
   const publicLinks = [];
 
   customHeaderLinks.split("|").map(i => {
-    const seg = $.map(i.split(","), $.trim);
-    const linkText = seg[0];
-    const linkTitle = seg[1];
-    const linkHref = seg[2];
-    const userClass = `.${seg[3]}`;
-    const linkTarget = seg[4] === "self" ? "" : "_blank";
-    const keepOnScrollClass = seg[5] === "keep" ? ".keep" : "";
+    const [linkText, linkTitle, linkHref, cls, _linkTarget, keepOnScroll] = $.map(i.split(","), $.trim);
+    const userClass = `.${cls}`;
+    const linkTarget = _linkTarget === "self" ? "" : "_blank";
+    const keepOnScrollClass = keepOnScroll === "keep" ? ".keep" : "";
     const linkClass = `.${linkText.trim().toLowerCase().replace(/\s/gi, '-')}-nav-item`;
     
     if (userClass === '.members' || userClass === '.both') {
@@ -73,8 +70,7 @@
               helper.h('li.nav-link-title.members', [
                 helper.h('a.nav-link', {
                     href:'/c/member-portal', 
-                    text:'Member Portal',
-                    target:'_self'
+                    text:'Member Portal'
                 }) 
               ]),
               memberLinks,
