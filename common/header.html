@@ -1,1 +1,7 @@
-<script type="text/discourse-plugin" version="0.8.20"></script>
+<script type="text/discourse-plugin" version="0.8.20">
+  const { iconNode } = require("discourse-common/lib/icon-library");
+
+  api.decorateWidget('home-logo:before', function(helper) {
+    return helper.h('span#back-to-top', ['Back to Top']);
+  });
+</script>

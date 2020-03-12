@@ -1,64 +1,8 @@
 <script>
-	function calcWidth() {
-		var navwidth = 0;
-		var morewidth = $('.nav-link-container .more').outerWidth(true) + 10;
-		$('.nav-link-container > li:not(.more)').each(function() {
-			navwidth += $(this).outerWidth( true );
-		});
-		
-		var availablespace = $('.nav-link-container').width() - morewidth;
-
-		if (navwidth > availablespace) {
-			var lastItem = $('.nav-link-container > li:not(.more)').last();
-			lastItem.attr('data-width', lastItem.outerWidth(true));
-			lastItem.prependTo($('.nav-link-container .more ul'));
-			calcWidth();
-		} 
-		else {
-			var firstMoreElement = $('.nav-link-container li.more li').first();
-			while (navwidth + firstMoreElement.data('width') < availablespace && $('.nav-link-container .more li').length > 0) {
-				firstMoreElement.insertBefore($('.nav-link-container .more'));
-				firstMoreElement = $('.nav-link-container li.more li').first();
-			}
-		}
-		
-		if ($('.nav-link-container .more li').length > 0) {
-			$('.nav-link-container .more').css('display','block');
-		} 
-		else {
-			$('.nav-link-container .more').css('display','none');
-		}
-	};
-
-	function setActiveNav() {
-		$('.nav-link-container li a').removeClass('active');
-		$('.nav-link-container li a[href="' + location.pathname + '"]').addClass('active');
-	};
-
-    
-	$(document).ready(function() {
-		$('.nav-link-container li.more').on('click', function() {
-			$('.nav-link-container .more').toggleClass('visible');            
-		});
-        
-		$('.nav-link-container').on('click', function() {
-			$('.nav-link-container').removeClass('visible');            
-			$('.nav-link-trigger').removeClass('open');
-		});
-        
-		$('.nav-link-trigger').on('click', function(e) {
-			e.preventDefault();
-			$('.nav-link-container').toggleClass('visible');
-			$('.nav-link-trigger').toggleClass('open');
-		});
-
-		$(window).on('resize load',function(){
-			if ($(window).width() > 600) {
-			    calcWidth();
-			}
-		});
-		
-		setActiveNav();
-
-	});
+  $(document).ready(function() {
+    const backToTop = $('#back-to-top');
+    backToTop.on('click', function(event) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
 </script>
