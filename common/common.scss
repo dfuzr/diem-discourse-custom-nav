@@ -1,1 +1,41 @@
 @import 'lib/discourse-nav';
+
+#unified-nav {
+  background-color: #fff;
+  padding: 0;
+  min-height: 50px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+
+  .main-nav,
+  #SubNav {
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    height: 60px;
+    box-sizing: border-box;
+    position: relative;
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+  .main-nav {
+    background-color: #fff;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    z-index: 2;
+
+    #back-to-top {
+      display: none;
+    }
+  }
+  #SubNav {
+    background-color: #f9f8f8;
+    color: #354052;
+    z-index: 1;
+  }
+}
+
+#main-outlet {
+  padding-top: calc(5.8572em + 80px);
+}
