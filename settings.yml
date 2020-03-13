@@ -2,4 +2,4 @@ main_nav_links:
   default: ''
   client: true
   type: list
-  description: 'Links for the Main Nav.\nEach Link is a JSON object representing the link. Options are:\n<b>title</b> - string: the link text\n<b>href</b> - string: the href for the link\n<b>selected</b> - boolean: Will color link as currently selected link\n<b>mobileTopRight</b> - boolean: should the link be displayed in the top right on mobile\n<b>mobileImg</b> - object { src: string, alt: string }: The image to be displayed on mobile instead of the <em>title</em>'
+  description: 'Links for the Main Nav.<br/>Each Link is a JSON object representing the link. Options are:<br/><b>title</b> - string: the link text<br/><b>href</b> - string: the href for the link<br/><b>selected</b> - boolean: Will color link as currently selected link<br/><b>mobileTopRight</b> - boolean: should the link be displayed in the top right on mobile<br/><b>mobileImg</b> - object { src: string, alt: string }: The image to be displayed on mobile instead of the <em>title</em>'
