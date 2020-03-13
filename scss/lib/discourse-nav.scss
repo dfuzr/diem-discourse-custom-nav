@@ -9,6 +9,7 @@ $avatar-image-size: 1.8em;
 }
 
 .d-header {
+  font-size: 12px;
   position: fixed;
   margin: 0;
   height: 0;
@@ -87,15 +88,16 @@ $avatar-image-size: 1.8em;
 
   .header-buttons:not(:empty) {
     margin: 0;
-    margin-left: 0.4em;
     order: 1;
+    margin-left: 3px;
     justify-content: flex-end;
   }
 
   .sign-up-button,
   .login-button {
+    display: block;
     span {
-      font-size: 1rem;
+      font-size: 0.6rem;
       font-weight: 600;
     }
   }
@@ -103,15 +105,21 @@ $avatar-image-size: 1.8em;
 
 .d-header-icons .d-icon {
   color: $header-primary;
-  font-size: 1rem;
+  font-size: 12px;
 }
 
 .d-header-icons {
   flex: 0 0 auto;
   $image-size: 2em;
-  .icon img.avatar {
-    height: $avatar-image-size;
-    width: $avatar-image-size;
+  .icon {
+    width: 34px;
+    box-sizing: border-box;
+    padding: 0;
+    height: 42px;
+    img.avatar {
+      height: $avatar-image-size;
+      width: $avatar-image-size;
+    }
   }
 }
 
