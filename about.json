@@ -2,5 +2,6 @@
   "name": "libra-discourse-custom-nav",
   "about_url": "",
   "component": true,
-  "license_url": ""
+  "license_url": "",
+  "minimum_discourse_version": "2.3.0.beta9"
 }
