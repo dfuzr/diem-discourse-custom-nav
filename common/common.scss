@@ -1,5 +1,11 @@
 @import 'lib/discourse-nav';
 
+$header-font-color: #39298c;
+
+.pointer {
+  cursor: pointer;
+}
+
 #unified-nav {
   background-color: #fff;
   padding: 0;
@@ -8,6 +14,28 @@
   top: 0;
   width: 100%;
   z-index: 9999;
+
+  img {
+    border-style: none;
+    box-sizing: content-box;
+    max-width: 100%;
+  }
+  .pointer {
+    cursor: pointer;
+  }
+
+  span.fill {
+    width: 100%;
+    height: 100%;
+  }
+
+  .wrapper {
+    width: 100%;
+  }
+
+  .mobile-hidden {
+    display: none !important;
+  }
 
   .main-nav,
   #SubNav {
@@ -19,11 +47,44 @@
     flex-flow: row nowrap;
     align-items: center;
   }
+
   .main-nav {
     background-color: #fff;
     padding-top: 0.4rem;
     padding-bottom: 0.4rem;
     z-index: 2;
+
+    .logo-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: $header-font-color;
+      .title {
+        img {
+          height: 34px;
+        }
+      }
+    }
+
+    .main-nav-trigger {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 10000;
+      height: 22px;
+      width: 22px;
+      cursor: pointer;
+      box-sizing: content-box;
+
+      > span {
+        height: 100%;
+      }
+      .fa.d-icon.d-icon-ellipsis-v.svg-icon {
+        margin-left: -1px;
+        height: 50%;
+      }
+    }
 
     #back-to-top {
       display: none;
