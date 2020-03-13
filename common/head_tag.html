@@ -1,8 +1,12 @@
 <script>
   $(document).ready(function() {
+    addBackToTopClickFunctionality();
+  });
+
+  function addBackToTopClickFunctionality() {
     const backToTop = $('#back-to-top');
     backToTop.on('click', function(event) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-  });
+  }
 </script>
