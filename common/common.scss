@@ -29,8 +29,10 @@ $header-font-color: #39298c;
     height: 100%;
   }
 
-  .wrapper {
+  .wrapper.wrap {
     width: 100%;
+    max-width: 1400px;
+    padding: 0 20px;
   }
 
   .mobile-hidden {
@@ -77,9 +79,33 @@ $header-font-color: #39298c;
       cursor: pointer;
       box-sizing: content-box;
 
+      &.trigger-open {
+        margin-left: -5px;
+      }
+      &.trigger-closed {
+        margin-left: -7px;
+        padding-right: 2px;
+
+        div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: rgb(243, 243, 243);
+          border-radius: 100%;
+          height: 22px;
+          width: 22px;
+          svg {
+            height: 65%;
+            margin-left: -1px;
+            margin-bottom: -1px;
+          }
+        }
+      }
+
       > span {
         height: 100%;
       }
+
       .fa.d-icon.d-icon-ellipsis-v.svg-icon {
         margin-left: -1px;
         height: 50%;

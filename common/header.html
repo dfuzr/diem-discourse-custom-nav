@@ -100,7 +100,7 @@
         this.attach('main-nav-trigger', {
           classNames: ['trigger-closed', 'mobile-hidden'],
           img: { src: closeSrc, alt: 'Close' },
-          altIcon: iconNode('times'),
+          altIcon: h('div', [iconNode('times')]),
         }),
         this.attach('home-logo'),
         this.attach('top-right-mobile-links'),
