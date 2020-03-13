@@ -1,7 +1,6 @@
 @import 'common/foundation/variables';
 @import 'theme_variables';
-
-$avatar-image-size: 1.8em;
+@import './mixins.scss';
 
 .drop-down-mode .d-header-icons .active .icon::after {
   top: -1px;
@@ -111,5 +110,24 @@ $avatar-image-size: 1.8em;
   .icon img.avatar {
     height: $avatar-image-size;
     width: $avatar-image-size;
+  }
+}
+
+// Updates to Member-portal due to footer nav
+
+.member-portal-homepage {
+  margin-bottom: calc(4em + 40px);
+  @include large {
+    margin-bottom: calc(8em + 40px);
+  }
+  @include desktop {
+    margin-bottom: 8em;
+  }
+}
+
+.category-member-portal footer {
+  margin-bottom: 40px;
+  @include desktop {
+    margin-bottom: 0;
   }
 }
