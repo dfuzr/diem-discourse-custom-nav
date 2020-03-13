@@ -1,5 +1,5 @@
 main_nav_links:
   default: ''
   client: true
-  type: upload
-  description: 'Upload a json file for the MainNav Links. Links for the Main Nav.'
+  type: list
+  description: 'Links for the Main Nav.'
