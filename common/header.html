@@ -67,7 +67,8 @@
     buildKey: () => 'main-nav-trigger',
     html(attrs) {
       this.updateTagName(attrs);
-      return [this.attach];
+      const { src, alt } = attrs;
+      return [this.attach('image', { noImage: attrs.altIcon, src, alt })];
     },
     updateTagName(attrs) {
       this.tagName +=
@@ -85,10 +86,12 @@
         this.attach('main-nav-trigger', {
           classNames: ['trigger-open'],
           img: { src: openSrc, alt: 'Open' },
+          altIcon: iconNode('ellipsis-v'),
         }),
         this.attach('main-nav-trigger', {
           classNames: ['trigger-closed', 'mobile-hidden'],
           img: { src: closeSrc, alt: 'Close' },
+          altIcon: iconNode('times'),
         }),
         this.attach('home-logo'),
         this.attach('top-right-mobile-links'),

@@ -1,3 +1,7 @@
+information:
+  client: true
+  description: 'This site setting only gives information to the user of this theme component.<br/>The following files need to be uploaded:<br/><b>back-to-top</b> - arrow image to be displayed next to mobile back to top text<br /><b>open-main-nav-icon</b> - icon to display to open mobile nav<br/><b>close-main-nav-icon</b> - icon to display to clode mobile nav<br/>'
+
 main_nav_links:
   default: ''
   client: true
