@@ -3,26 +3,143 @@
   const { h } = require('virtual-dom');
   const { iconNode } = require('discourse-common/lib/icon-library');
 
+  api.createWidget('image', {
+    tagName: 'span',
+    html({ src, alt, noImage = null }) {
+      if (src) {
+        return h('img', {
+          attributes: {
+            src,
+            alt,
+          },
+        });
+      }
+      return noImage;
+    },
+  });
+
   /*
-  --------------------------------------
-        Mobile Discourse Footer Nav
-  --------------------------------------
+    --------------------------------------
+          Mobile Discourse Footer Nav
+    --------------------------------------
   */
   api.decorateWidget('home-logo:before', function(helper) {
     const contents = () => {
       const src = settings.theme_uploads && settings.theme_uploads['back-to-top'];
-      if (src) {
-        return [
-          h('img', {
-            attributes: {
-              src,
-            },
-          }),
-        ];
-      }
-      return [];
+      return [helper.attach('image', { src })].filter((item) => item);
     };
     return helper.h('span#back-to-top', ['Back to Top', helper.h('span.arrow-up-icon', contents())]);
   });
   /* -------------------------------------- */
+
+  api.createWidget('top-right-mobile-link', {
+    tagName: 'div.mobile.link-image',
+    buildKey: () => 'top-right-mobile-link',
+    html(link) {
+      const { href, mobileImg = {}, title, external } = link;
+      const contents = () => {
+        const { src, alt } = mobileImg;
+        return [this.attach('image', { src, alt, noImage: title })];
+      };
+      return h(
+        'a',
+        {
+          attributes: {
+            href,
+            target: external ? '_blank' : '_self',
+          },
+        },
+        contents(),
+      );
+    },
+  });
+
+  api.createWidget('top-right-mobile-links', {
+    tagName: 'div.top-right-mobile-links.mobile',
+    html() {
+      const links = getMainNavLinks().filter(({ mobileTopRight }) => mobileTopRight);
+      return links.map((link) => this.attach('top-right-mobile-link', link));
+    },
+  });
+
+  api.createWidget('main-nav-trigger', {
+    tagName: 'div.mobile.main-nav-trigger.pointer',
+    buildKey: () => 'main-nav-trigger',
+    html(attrs) {
+      this.updateTagName(attrs);
+      return [this.attach];
+    },
+    updateTagName(attrs) {
+      this.tagName +=
+        attrs.classNames && attrs.classNames.length > 0 ? `.${attrs.classNames.join('.')}` : '';
+    },
+  });
+
+  api.createWidget('logo-container', {
+    tagName: 'div.logo-container',
+    buildKey: () => 'logo-container',
+    html() {
+      const openSrc = settings.theme_uploads && settings.theme_uploads['open-main-nav-icon'];
+      const closeSrc = settings.theme_uploads && settings.theme_uploads['close-main-nav-icon'];
+      return [
+        this.attach('main-nav-trigger', {
+          classNames: ['trigger-open'],
+          img: { src: openSrc, alt: 'Open' },
+        }),
+        this.attach('main-nav-trigger', {
+          classNames: ['trigger-closed', 'mobile-hidden'],
+          img: { src: closeSrc, alt: 'Close' },
+        }),
+        this.attach('home-logo'),
+        this.attach('top-right-mobile-links'),
+      ];
+    },
+  });
+
+  api.createWidget('main-nav', {
+    tagName: 'div.main-nav',
+    buildKey: () => 'main-nav',
+    html() {
+      return h('div.wrapper.wrap', [this.attach('logo-container')]);
+    },
+  });
+
+  api.createWidget('sub-nav', {
+    tagName: 'div#SubNav',
+    buildKey: () => 'sub-nav',
+    html(attr, state) {
+      return h('div.wrapper.wrap', ['SubNav']);
+    },
+  });
+
+  api.createWidget('unified-nav', {
+    tagName: 'div#unified-nav',
+    buildKey: () => 'unified-nav',
+    html(attrs, state) {
+      return h('header', [this.attach('main-nav'), this.attach('sub-nav')]);
+    },
+  });
+
+  api.decorateWidget('unified-nav:after', (helper) => {
+    helper.widget.appEvents.on('page:changed', () => {
+      helper.widget.scheduleRerender();
+    });
+  });
+
+  function getMainNavLinks() {
+    return settings.main_nav_links
+      .split('|')
+      .map((link) => {
+        try {
+          return JSON.parse(link);
+        } catch (error) {
+          console.error(error);
+        }
+      })
+      .filter((item) => item);
+  }
+</script>
+
+<script type="text/x-handlebars" data-template-name="/connectors/above-site-header/unified-nav">
+  {{mount-widget widget="unified-nav"}}
 </script>
