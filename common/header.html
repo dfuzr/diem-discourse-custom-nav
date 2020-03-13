@@ -4,7 +4,7 @@
   const { iconNode } = require('discourse-common/lib/icon-library');
 
   api.createWidget('image', {
-    tagName: 'span',
+    tagName: 'span.fill',
     html({ src, alt, noImage = null }) {
       if (src) {
         return h('img', {
@@ -15,6 +15,23 @@
         });
       }
       return noImage;
+    },
+  });
+
+  api.createWidget('link', {
+    tagName: 'span.fill',
+    html(attrs) {
+      const { external, href, contents = () => [] } = attrs;
+      return h(
+        'a',
+        {
+          attributes: {
+            href,
+            target: external ? '_blank' : '_self',
+          },
+        },
+        contents(),
+      );
     },
   });
 
@@ -36,21 +53,12 @@
     tagName: 'div.mobile.link-image',
     buildKey: () => 'top-right-mobile-link',
     html(link) {
-      const { href, mobileImg = {}, title, external } = link;
+      const { mobileImg = {}, title } = link;
       const contents = () => {
         const { src, alt } = mobileImg;
         return [this.attach('image', { src, alt, noImage: title })];
       };
-      return h(
-        'a',
-        {
-          attributes: {
-            href,
-            target: external ? '_blank' : '_self',
-          },
-        },
-        contents(),
-      );
+      return [this.attach('link', Object.assign({}, link, { contents }) )];
     },
   });
 
@@ -64,7 +72,7 @@
 
   api.createWidget('main-nav-trigger', {
     tagName: 'div.mobile.main-nav-trigger.pointer',
-    buildKey: () => 'main-nav-trigger',
+    buildKey: ({ classNames }) => `main-nav-trigger.${classNames.join('.')}`,
     html(attrs) {
       this.updateTagName(attrs);
       const { src, alt } = attrs;
