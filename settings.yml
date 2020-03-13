@@ -1,6 +1,6 @@
 information:
   client: true
-  description: 'This site setting only gives information to the user of this theme component.<br/>The following files need to be uploaded:<br/><b>back-to-top</b> - arrow image to be displayed next to mobile back to top text<br /><b>open-main-nav-icon</b> - icon to display to open mobile nav<br/><b>close-main-nav-icon</b> - icon to display to clode mobile nav<br/>'
+  description: 'This site setting only gives information to the user of this theme component.<br/>The following files need to be uploaded:<br/><b>back-to-top</b> - arrow image to be displayed next to mobile back to top text<br /><b>open-main-nav-icon</b> - icon to display to open mobile nav<br/><b>close-main-nav-icon</b> - icon to display to close mobile nav'
 
 main_nav_links:
   default: ''
@@ -12,4 +12,3 @@ sub_nav_links:
   default: ''
   client: true
   type: list
-  description: 'Links for the Sub Nav.<br/>Each Link is a JSON object representing the link. Options are:<br/><b>title</b> - string: the link text<br/><b>href</b> - string: the href for the link<br/><b>selected</b> - boolean: Will color link as currently selected link<br/><b>subLinks</b> - sub_nav_links[]: Array of child links'
