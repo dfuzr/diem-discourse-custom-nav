@@ -1,67 +1,28 @@
 <script type="text/discourse-plugin" version="0.8.20">
   const container = Discourse.__container__;
   const { h } = require('virtual-dom');
-  const { iconNode } = require("discourse-common/lib/icon-library");
+  const { iconNode } = require('discourse-common/lib/icon-library');
 
+  /*
+  --------------------------------------
+        Mobile Discourse Footer Nav
+  --------------------------------------
+  */
   api.decorateWidget('home-logo:before', function(helper) {
-    return helper.h('span#back-to-top', ['Back to Top', helper.h('span.arrow-up-icon')]);
+    const contents = () => {
+      const src = settings.theme_uploads && settings.theme_uploads['back-to-top'];
+      if (src) {
+        return [
+          h('img', {
+            attributes: {
+              src,
+            },
+          }),
+        ];
+      }
+      return [];
+    };
+    return helper.h('span#back-to-top', ['Back to Top', helper.h('span.arrow-up-icon', contents())]);
   });
-
-  api.createWidget('main-nav-trigger', {
-    tagName: 'div.mobile.main-nav-trigger.pointer',
-    buildKey: () => 'main-nav-trigger',
-    html(attrs) {
-      this.updateTagName(attrs);
-      return h('img');
-    },
-    updateTagName(attrs) {
-      this.tagName += attrs.classNames && attrs.classNames.length > 0 ? `.${attrs.classNames.join('.')}` : ''
-    }
-  });
-
-  api.createWidget('logo-container', {
-    tagName: 'div.logo-container',
-    buildKey: () => 'logo-container',
-    html() {
-      return [
-        this.attach('main-nav-trigger', { classNames: ['trigger-open'] }),
-        this.attach('main-nav-trigger', { classNames: ['trigger-closed', 'mobile-hidden'] }),
-        this.attach('home-logo')
-      ]
-    }
-  })
-
-  api.createWidget('main-nav', {
-    tagName: 'div.main-nav',
-    buildKey: () => 'main-nav',
-    html() {
-      return h('div.wrapper.wrap', [this.attach('logo-container')])
-    }
-  });
-
-  api.createWidget('sub-nav', {
-    tagName: 'div#SubNav',
-    buildKey: () => 'sub-nav',
-    html(attr, state) {
-      return h('div.wrapper.wrap', ['SubNav'])
-    }
-  });
-
-  api.createWidget('unified-nav', {
-    tagName: 'div#unified-nav',
-    buildKey: () => 'unified-nav',
-    html(attrs, state) {
-      return h('header', [this.attach('main-nav'), this.attach('sub-nav')]);
-    },
-  });
-
-  api.decorateWidget('unified-nav:after', helper => {
-    helper.widget.appEvents.on('page:changed', () => {
-      helper.widget.scheduleRerender();
-    });
-  });
-</script>
-
-<script type="text/x-handlebars" data-template-name="/connectors/above-site-header/unified-nav">
-  {{mount-widget widget="unified-nav"}}
+  /* -------------------------------------- */
 </script>
