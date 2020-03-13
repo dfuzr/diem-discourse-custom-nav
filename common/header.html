@@ -21,9 +21,10 @@
   api.createWidget('link', {
     tagName: 'span.fill',
     html(attrs) {
-      const { external, href, contents = () => [] } = attrs;
+      const { external, href, contents = () => [], classNames = [] } = attrs;
+      const classes = classNames.length ? `.${classNames.join('.')}` : ''
       return h(
-        'a',
+        `a${classes}`,
         {
           attributes: {
             href,
@@ -58,7 +59,7 @@
         const { src, alt } = mobileImg;
         return [this.attach('image', { src, alt, noImage: title })];
       };
-      return [this.attach('link', Object.assign({}, link, { contents }) )];
+      return [this.attach('link', Object.assign({}, link, { contents }))];
     },
   });
 
@@ -107,11 +108,35 @@
     },
   });
 
+  api.createWidget('main-nav-links', {
+    tagName: 'div.navigationWrapper.navigationSlider.mobile-hidden',
+    buildKey: () => 'main-nav-links',
+    html() {
+      const links = getMainNavLinks().map((link) => {
+        const classNames = [];
+        const contents = () => link.title;
+        if (link.highlight) {
+          classNames.push('highlight');
+        }
+        if (link.mobileTopRight) {
+          classNames.push('mobile-hidden');
+        }
+        return Object.assign({}, link, { classNames, contents });
+      });
+      return h('nav.slidingNav', [
+        h(
+          'ul.nav-site.nav-site-internal',
+          links.map((link) => this.attach('link', link)),
+        ),
+      ]);
+    },
+  });
+
   api.createWidget('main-nav', {
     tagName: 'div.main-nav',
     buildKey: () => 'main-nav',
     html() {
-      return h('div.wrapper.wrap', [this.attach('logo-container')]);
+      return h('div.wrapper.wrap', [this.attach('logo-container'), this.attach('main-nav-links')]);
     },
   });
 
