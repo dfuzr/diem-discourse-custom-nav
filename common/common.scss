@@ -1,6 +1,8 @@
 @import 'common/foundation/variables';
 @import 'theme_variables';
-@import './mixins';
+@import 'mixins';
+
+$avatar-image-size: 1.8em;
 
 .drop-down-mode .d-header-icons .active .icon::after {
   top: -1px;
