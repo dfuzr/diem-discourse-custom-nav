@@ -121,12 +121,15 @@
         if (link.mobileTopRight) {
           classNames.push('mobile-hidden');
         }
+        if (link.selected) {
+          classNames.push('selected');
+        }
         return Object.assign({}, link, { classNames, contents });
       });
       return h('nav.slidingNav', [
         h(
           'ul.nav-site.nav-site-internal',
-          links.map((link) => this.attach('link', link)),
+          links.map((link) => h('li', this.attach('link', link))),
         ),
       ]);
     },
