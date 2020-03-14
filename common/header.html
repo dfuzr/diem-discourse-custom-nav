@@ -101,7 +101,7 @@
 
   api.createWidget('main-nav-toggles', {
     buildKey: () => 'main-nav-toggles',
-    contents: () => {
+    html() {
       const openSrc = settings.theme_uploads && settings.theme_uploads['open-main-nav-icon'];
       const closeSrc = settings.theme_uploads && settings.theme_uploads['close-main-nav-icon'];
       return [

@@ -2,10 +2,6 @@
 
 $header-font-color: #39298c;
 
-.pointer {
-  cursor: pointer;
-}
-
 #unified-nav {
   background-color: #fff;
   padding: 0;
@@ -57,6 +53,10 @@ $header-font-color: #39298c;
     z-index: 2;
 
     .logo-container {
+      user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-user-select: none;
       display: flex;
       justify-content: space-between;
       align-items: center;

@@ -4,7 +4,7 @@
   });
 
   function addBackToTopClickFunctionality() {
-    const backToTop = $('#back-to-top');
+    const backToTop = $('.d-header #back-to-top');
     backToTop.on('click', function(event) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
