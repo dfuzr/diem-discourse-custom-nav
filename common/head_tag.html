@@ -16,9 +16,7 @@
 
     $(document).ready(function() {
       addClickHandlersToMainNavTriggers();
-      {
-        /* addClickHandlersToSubNavTriggers(); */
-      }
+      addClickHandlersToSubNavTriggers();
     });
 
     function addClickHandlersToMainNavTriggers() {
@@ -48,9 +46,11 @@
         }
         isSubNavClick = false;
       });
-      subNav.addEventListener('click', function(event) {
-        event.stopPropagation();
-      });
+      if (subNav) {
+        subNav.addEventListener('click', function(event) {
+          event.stopPropagation();
+        });
+      }
       addClickHandlersToNavToggles(subNavToggles, subNav, false, true);
     }
 

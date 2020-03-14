@@ -85,10 +85,23 @@
     },
   });
 
-  api.createWidget('logo-container', {
-    tagName: 'div.logo-container',
-    buildKey: () => 'logo-container',
-    html() {
+  api.createWidget('sub-nav-trigger', {
+    tagName: 'div.mobile.sub-nav-trigger.pointer',
+    buildKey: ({ classNames }) => `sub-nav-trigger.${classNames.join('.')}`,
+    html(attrs) {
+      this.updateTagName(attrs);
+      const { src, alt } = attrs;
+      return [this.attach('image', { noImage: attrs.altIcon, src, alt })];
+    },
+    updateTagName(attrs) {
+      this.tagName +=
+        attrs.classNames && attrs.classNames.length > 0 ? `.${attrs.classNames.join('.')}` : '';
+    },
+  });
+
+  api.createWidget('main-nav-toggles', {
+    buildKey: () => 'main-nav-toggles',
+    contents: () => {
       const openSrc = settings.theme_uploads && settings.theme_uploads['open-main-nav-icon'];
       const closeSrc = settings.theme_uploads && settings.theme_uploads['close-main-nav-icon'];
       return [
@@ -102,6 +115,16 @@
           img: { src: closeSrc, alt: 'Close' },
           altIcon: h('div', [iconNode('times')]),
         }),
+      ];
+    }
+  });
+
+  api.createWidget('logo-container', {
+    tagName: 'div.logo-container',
+    buildKey: () => 'logo-container',
+    html() {
+      return [
+        this.attach('main-nav-toggles'),
         this.attach('home-logo'),
         this.attach('top-right-mobile-links'),
       ];
@@ -143,11 +166,40 @@
     },
   });
 
+  api.createWidget('breadcrumb', {
+    tagName: 'div.breadcrumb',
+    html() {
+      return ['Developers'];
+    }
+  })
+  api.createWidget('sub-nav-links', {})
+
+  api.createWidget('sub-nav-toggles', {
+    tagName: 'div',
+    buildKey: () => 'sub-nav-toggles',
+    html() {
+      const openSrc = settings.theme_uploads && settings.theme_uploads['open-sub-nav-icon'];
+      const closeSrc = settings.theme_uploads && settings.theme_uploads['close-sub-nav-icon'];
+      return [
+        this.attach('sub-nav-trigger', {
+          classNames: ['trigger-open'],
+          img: { src: openSrc, alt: 'Open' },
+          altIcon: iconNode('chevron-down'),
+        }),
+        this.attach('sub-nav-trigger', {
+          classNames: ['trigger-closed', 'mobile-hidden'],
+          img: { src: closeSrc, alt: 'Close' },
+          altIcon: h('div', [iconNode('chevron-up')]),
+        }),
+      ];
+    }
+  });
+
   api.createWidget('sub-nav', {
     tagName: 'div#SubNav',
     buildKey: () => 'sub-nav',
     html(attr, state) {
-      return h('div.wrapper.wrap', ['SubNav']);
+      return h('div.wrapper.wrap', [this.attach('breadcrumb'), this.attach('sub-nav-links'), this.attach('sub-nav-toggles')]);
     },
   });
 
