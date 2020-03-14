@@ -1,0 +1,53 @@
+{   
+  "title": "Overview",   
+  "href": "https://libra.org/open-source-developers/",  
+  "visibility": "public" 
+}
+{
+  "title": "Libra Docs",
+  "href": "https://developer.libra.org/docs/welcome-to-libra",
+  "visibility": "public"
+}
+{
+  "title": "Community",
+  "href": "https://community.libra.org/",
+  "visibility": "public"
+}
+{
+  "title": "Member Portal",
+  "href": "/c/member-portal",
+  "visibility": "members"
+  "subLinks": [
+    {
+      "title": "Home",
+      "href": "/c/member-portal",
+      "visibility": "members"
+    },
+    {
+      "title": "Updates",
+      "href": "/c/association-updates",
+      "visibility": "members"
+    },
+    {
+      "title": "Directory",
+      "href": "/member-directory",
+      "visibility": "members"
+    },
+    {
+      "title": "Calendar",
+      "href": "/t/calendar",
+      "visibility": "members"
+    },
+    {
+      "title": "Resources",
+      "href": "/c/member-resources",
+      "visibility": "members"
+    }
+  ]
+}
+{
+  "title": "Github",
+  "href": "https://github.com/libra/libra",
+  "external": true,
+  "visibility": "public"
+}
