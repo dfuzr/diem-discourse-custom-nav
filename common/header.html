@@ -236,13 +236,40 @@
     });
   });
 
+  api.createWidget('sub-nav-links-list', {
+    tagName: 'ul.nav-site.nav-site-internal',
+    html(attrs) {
+      const { links } = attrs;
+      const processedLinks = links.map((link) => {
+        const classNames = [];
+        const contents = () => link.title;
+        if (isLinkCurrentPageForBreadCrumb(link)) {
+          classNames.push('siteNavItemActive');
+        }
+        return Object.assign({}, link, { classNames, contents });
+      });
+      return processedLinks.map((link) => {
+        const linkContent = [this.attach('custom-link', link)];
+        if (link.subLinks && Array.isArray(link.subLinks)) {
+          linkContent.push(this.attach('sub-nav-links-list', { links: link.subLinks }));
+        }
+        return h('li', linkContent);
+      });
+    },
+  });
+
   api.createWidget('sub-nav-links', {
     tagName: 'div.mobile-hidden.navigationWrapper.navigationSlider',
     html() {
       const subNavLinks = getSubNavLinks();
-      console.log('subNavLinks', subNavLinks);
-      return ['test'];
+      return h('nav.slidingNav', [this.attach('sub-nav-links-list', { links: subNavLinks })]);
     },
+  });
+
+  api.decorateWidget('sub-nav-links:after', (helper) => {
+    helper.widget.appEvents.on('page:changed', () => {
+      helper.widget.scheduleRerender();
+    });
   });
 
   api.createWidget('sub-nav-toggles', {
@@ -299,8 +326,8 @@
   }
 
   function getSubNavLinks() {
-    return convertAndErrorCheckSettingsLinks(settings.sub_nav_links).filter(
-      (link) => !isCurrentUserMember() ? link.visibility === 'public' || link.visibility === 'both' : true
+    return convertAndErrorCheckSettingsLinks(settings.sub_nav_links).filter((link) =>
+      !isCurrentUserMember() ? link.visibility === 'public' || link.visibility === 'both' : true,
     );
   }
 
@@ -318,12 +345,10 @@
   }
 
   function shouldIncludeInBreadcrumbOnPaths(link) {
-    console.log(link);
     if (
       link.shouldIncludeInBreadcrumbOnPaths &&
       Array.isArray(link.shouldIncludeInBreadcrumbOnPaths)
     ) {
-      console.log(link.shouldIncludeInBreadcrumbOnPaths);
       return (
         link.shouldIncludeInBreadcrumbOnPaths.filter((path) =>
           new RegExp(path).test(window.location.pathname),
