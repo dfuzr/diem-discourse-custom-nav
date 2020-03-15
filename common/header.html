@@ -2,6 +2,26 @@
   const container = Discourse.__container__;
   const { h } = require('virtual-dom');
 
+  function isCurrentUserMember() {
+    const user = api.getCurrentUser() || {};
+    const groups = user.groups || [];
+    // Use Discourse.SiteSettings instead of hard coded group name "members"
+    const groupsWithAccessToMemberDirectory = [
+      Discourse.SiteSettings.libra_discourse_member_directory_group_name,
+      ...(
+        Discourse.SiteSettings.libra_discourse_member_directory_groups_with_member_directory_access ||
+        ''
+      ).split('|'),
+    ].filter(function(groupName) {
+      return groupName.length > 0;
+    });
+    return (
+      groups.filter(function(group) {
+        return groupsWithAccessToMemberDirectory.includes(group.name);
+      }).length > 0
+    );
+  }
+
   function getAssetUrls() {
     if (
       window.getComputedStyle &&
@@ -279,7 +299,9 @@
   }
 
   function getSubNavLinks() {
-    return convertAndErrorCheckSettingsLinks(settings.sub_nav_links);
+    return convertAndErrorCheckSettingsLinks(settings.sub_nav_links).filter(
+      (link) => !isCurrentUserMember() ? link.visibility === 'public' || link.visibility === 'both' : true
+    );
   }
 
   function convertAndErrorCheckSettingsLinks(links) {
@@ -295,8 +317,54 @@
       .filter((item) => item);
   }
 
+  function shouldIncludeInBreadcrumbOnPaths(link) {
+    console.log(link);
+    if (
+      link.shouldIncludeInBreadcrumbOnPaths &&
+      Array.isArray(link.shouldIncludeInBreadcrumbOnPaths)
+    ) {
+      console.log(link.shouldIncludeInBreadcrumbOnPaths);
+      return (
+        link.shouldIncludeInBreadcrumbOnPaths.filter((path) =>
+          new RegExp(path).test(window.location.pathname),
+        ).length > 0
+      );
+    }
+    return false;
+  }
+
+  function isLinkCurrentPageForBreadCrumb(link) {
+    return (
+      !link.doNotIncludeInBreadcrumb &&
+      (new RegExp(link.href).test(window.location.href) || shouldIncludeInBreadcrumbOnPaths(link))
+    );
+  }
+
+  function isChildLinkCurrentPage(link) {
+    return (
+      link.subLinks &&
+      Array.isArray(link.subLinks) &&
+      link.subLinks.filter(isLinkCurrentPageForBreadCrumb).length
+    );
+  }
+
+  function flattenLinks(links) {
+    if (links.length === 0) {
+      return links;
+    }
+    const [firstLink, ...rest] = links;
+    const flattenedRest = flattenLinks(rest);
+    const flattenedFirst =
+      firstLink.subLinks && Array.isArray(firstLink.subLinks)
+        ? [firstLink].concat(flattenLinks(firstLink.subLinks))
+        : [firstLink];
+    return flattenedFirst.concat(flattenedRest);
+  }
+
   function getBreadCrumb() {
-    return getSubNavLinks().filter((link) => new RegExp(link.href).test(window.location.href));
+    return flattenLinks(getSubNavLinks()).filter((link) => {
+      return isLinkCurrentPageForBreadCrumb(link) || isChildLinkCurrentPage(link);
+    });
   }
 </script>
 

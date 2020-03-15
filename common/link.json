@@ -18,11 +18,25 @@
     "title": "Member Portal",
     "href": "/c/member-portal",
     "visibility": "members",
+    "shouldIncludeInBreadcrumbOnPaths": [
+      "/c/node-operations",
+      "/libra-discourse-member-directory",
+      "/wg",
+      "/working-groups",
+      "/c/group-managment",
+      "/c/group-management",
+      "/c/policy-wg",
+      "/c/libraupgrade-wg",
+      "/c/off-chain-protocols-wg",
+      "/c/communications-wg",
+      "/c/mainnet-operations-wg"
+    ],
     "subLinks": [
       {
         "title": "Home",
         "href": "/c/member-portal",
-        "visibility": "members"
+        "visibility": "members",
+        "doNotIncludeInBreadcrumb": true
       },
       {
         "title": "Updates",
@@ -31,7 +45,7 @@
       },
       {
         "title": "Directory",
-        "href": "/member-directory",
+        "href": "/libra-discourse-member-directory",
         "visibility": "members"
       },
       {
