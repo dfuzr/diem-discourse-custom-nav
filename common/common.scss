@@ -189,6 +189,7 @@ $header-font-color: #39298c;
       display: none;
     }
   }
+
   #SubNav {
     background-color: #f9f8f8;
     color: #354052;
@@ -200,6 +201,7 @@ $header-font-color: #39298c;
     }
 
     div.sub-header {
+      align-items: center;
       justify-content: space-between;
     }
 
@@ -215,18 +217,23 @@ $header-font-color: #39298c;
       }
 
       .breadcrumb-item {
+        display: inline-block;
         color: #7f8fa4;
         font-size: 12px;
         line-height: 14px;
 
         &:not(:first-child) {
           .mobile-hidden {
-            display: block;
+            display: inline-block !important;
           }
         }
-
         span {
-          margin: 0;
+          margin-left: 7px;
+        }
+        &:first-child {
+          span {
+            margin: 0;
+          }
         }
       }
     }
