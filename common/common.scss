@@ -1,5 +1,14 @@
 @import 'lib/discourse-nav';
 
+@function image-urls() {
+  @return '{ "arrow-up" : "#{$arrow-up}", "chevron-down": "#{$chevron-down}", "chevron-pressed": "#{$chevron-pressed}", "close": "#{$close}", "ellipse-v": "#{$ellipse-v}", "white-paper": "#{$white-paper}"}';
+}
+// Add image assets to body so JS can access them
+body::before {
+  display: none;
+  content: image-urls();
+}
+
 $header-font-color: #39298c;
 
 #unified-nav {
@@ -184,6 +193,15 @@ $header-font-color: #39298c;
     background-color: #f9f8f8;
     color: #354052;
     z-index: 1;
+    div.sub-header,
+    div.wrapper.wrap {
+      display: flex;
+      flex: 1;
+    }
+
+    div.sub-header {
+      justify-content: space-between;
+    }
   }
 }
 

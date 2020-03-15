@@ -1,7 +1,25 @@
 <script type="text/discourse-plugin" version="0.8.20">
   const container = Discourse.__container__;
   const { h } = require('virtual-dom');
-  const { iconNode } = require('discourse-common/lib/icon-library');
+
+  function getAssetUrls() {
+    if (window.getComputedStyle && window.getComputedStyle(document.body, '::before') && window.getComputedStyle(document.body, '::before').content) {
+      try {
+        return JSON.parse(JSON.parse(window.getComputedStyle(document.body, '::before').content));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return {};
+  }
+
+  function getAsset(name) {
+    return getAssetUrls()[name];
+  }
+
+  function imageAsset(name, _this) {
+    return _this.attach('image', { src: getAsset(name) });
+  }
 
   api.createWidget('image', {
     tagName: 'span.fill',
@@ -22,7 +40,7 @@
     tagName: 'span.fill',
     html(attrs) {
       const { external, href, contents = () => [], classNames = [] } = attrs;
-      const classes = classNames.length ? `.${classNames.join('.')}` : ''
+      const classes = classNames.length ? `.${classNames.join('.')}` : '';
       return h(
         `a${classes}`,
         {
@@ -43,7 +61,8 @@
   */
   api.decorateWidget('home-logo:before', function(helper) {
     const contents = () => {
-      const src = settings.theme_uploads && settings.theme_uploads['back-to-top'];
+      const src =
+        (settings.theme_uploads && settings.theme_uploads['back-to-top']) || getAsset('arrow-up');
       return [helper.attach('image', { src })].filter((item) => item);
     };
     return helper.h('span#back-to-top', ['Back to Top', helper.h('span.arrow-up-icon', contents())]);
@@ -108,15 +127,15 @@
         this.attach('main-nav-trigger', {
           classNames: ['trigger-open'],
           img: { src: openSrc, alt: 'Open' },
-          altIcon: iconNode('ellipsis-v'),
+          altIcon: imageAsset('ellipse-v', this),
         }),
         this.attach('main-nav-trigger', {
           classNames: ['trigger-closed', 'mobile-hidden'],
           img: { src: closeSrc, alt: 'Close' },
-          altIcon: h('div', [iconNode('times')]),
+          altIcon: imageAsset('close', this),
         }),
       ];
-    }
+    },
   });
 
   api.createWidget('logo-container', {
@@ -169,10 +188,18 @@
   api.createWidget('breadcrumb', {
     tagName: 'div.breadcrumb',
     html() {
+      const breadcrumb = getBreadCrumb();
       return ['Developers'];
-    }
-  })
-  api.createWidget('sub-nav-links', {})
+    },
+  });
+  api.createWidget('sub-nav-links', {
+    tagName: 'div.mobile-hidden.navigationWrapper.navigationSlider',
+    html() {
+      const subNavLinks = getSubNavLinks();
+      console.log('subNavLinks', subNavLinks);
+      return ['test'];
+    },
+  });
 
   api.createWidget('sub-nav-toggles', {
     tagName: 'div',
@@ -184,22 +211,28 @@
         this.attach('sub-nav-trigger', {
           classNames: ['trigger-open'],
           img: { src: openSrc, alt: 'Open' },
-          altIcon: iconNode('chevron-down'),
+          altIcon: imageAsset('chevron-down', this),
         }),
         this.attach('sub-nav-trigger', {
           classNames: ['trigger-closed', 'mobile-hidden'],
           img: { src: closeSrc, alt: 'Close' },
-          altIcon: h('div', [iconNode('chevron-up')]),
+          altIcon: imageAsset('chevron-pressed', this),
         }),
       ];
-    }
+    },
   });
 
   api.createWidget('sub-nav', {
     tagName: 'div#SubNav',
     buildKey: () => 'sub-nav',
     html(attr, state) {
-      return h('div.wrapper.wrap', [this.attach('breadcrumb'), this.attach('sub-nav-links'), this.attach('sub-nav-toggles')]);
+      return h('div.wrapper.wrap', [
+        h('div.sub-header', [
+          this.attach('breadcrumb'),
+          this.attach('sub-nav-links'),
+          this.attach('sub-nav-toggles'),
+        ]),
+      ]);
     },
   });
 
@@ -218,7 +251,15 @@
   });
 
   function getMainNavLinks() {
-    return settings.main_nav_links
+    return convertAndErrorCheckSettingsLinks(settings.main_nav_links);
+  }
+
+  function getSubNavLinks() {
+    return convertAndErrorCheckSettingsLinks(settings.sub_nav_links);
+  }
+
+  function convertAndErrorCheckSettingsLinks(links) {
+    return links
       .split('|')
       .map((link) => {
         try {
@@ -228,6 +269,10 @@
         }
       })
       .filter((item) => item);
+  }
+
+  function getBreadCrumb() {
+    return [];
   }
 </script>
 
