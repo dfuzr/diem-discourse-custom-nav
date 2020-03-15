@@ -202,9 +202,60 @@ $header-font-color: #39298c;
     div.sub-header {
       justify-content: space-between;
     }
+
+    .breadcrumb {
+      display: flex;
+      flex-direction: column-reverse;
+
+      h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 23px;
+      }
+
+      .breadcrumb-item {
+        color: #7f8fa4;
+        font-size: 12px;
+        line-height: 14px;
+
+        &:not(:first-child) {
+          .mobile-hidden {
+            display: block;
+          }
+        }
+
+        span {
+          margin: 0;
+        }
+      }
+    }
+
+    .navigationSlider .slidingNav {
+      margin-top: 30px;
+
+      ul {
+        background-color: #fff;
+
+        li {
+          a {
+            background-color: transparent;
+            color: #000000;
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 15px;
+            text-align: right;
+          }
+
+          &:not(:first-child) {
+            margin-left: 0px;
+          }
+        }
+      }
+    }
   }
 }
 
-#main-outlet {
-  padding-top: calc(5.8572em + 80px);
+div[class^='hero'] {
+  padding: calc(2rem + 80px + 80px) 0 10px 0;
 }

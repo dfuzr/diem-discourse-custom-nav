@@ -3,7 +3,11 @@
   const { h } = require('virtual-dom');
 
   function getAssetUrls() {
-    if (window.getComputedStyle && window.getComputedStyle(document.body, '::before') && window.getComputedStyle(document.body, '::before').content) {
+    if (
+      window.getComputedStyle &&
+      window.getComputedStyle(document.body, '::before') &&
+      window.getComputedStyle(document.body, '::before').content
+    ) {
       try {
         return JSON.parse(JSON.parse(window.getComputedStyle(document.body, '::before').content));
       } catch (error) {
@@ -18,7 +22,7 @@
   }
 
   function imageAsset(name, _this) {
-    return _this.attach('image', { src: getAsset(name) });
+    return _this.attach('image', { src: getAsset(name), alt: name });
   }
 
   api.createWidget('image', {
@@ -36,7 +40,7 @@
     },
   });
 
-  api.createWidget('link', {
+  api.createWidget('custom-link', {
     tagName: 'span.fill',
     html(attrs) {
       const { external, href, contents = () => [], classNames = [] } = attrs;
@@ -78,7 +82,7 @@
         const { src, alt } = mobileImg;
         return [this.attach('image', { src, alt, noImage: title })];
       };
-      return [this.attach('link', Object.assign({}, link, { contents }))];
+      return [this.attach('custom-link', Object.assign({}, link, { contents }))];
     },
   });
 
@@ -171,7 +175,7 @@
       return h('nav.slidingNav', [
         h(
           'ul.nav-site.nav-site-internal',
-          links.map((link) => h('li', this.attach('link', link))),
+          links.map((link) => h('li', this.attach('custom-link', link))),
         ),
       ]);
     },
@@ -185,13 +189,33 @@
     },
   });
 
+  api.createWidget('breadcrumbItem', {
+    tagName: 'div.breadcrumb-item',
+    html({ link }) {
+      return [h('span.mobile-hidden', ['/']), h('span', [link.title])];
+    },
+  });
+
   api.createWidget('breadcrumb', {
     tagName: 'div.breadcrumb',
     html() {
       const breadcrumb = getBreadCrumb();
-      return ['Developers'];
+      return [
+        h('h2', ['Developers']),
+        h(
+          'div.breadcrumb-items',
+          breadcrumb.map((link) => this.attach('breadcrumbItem', { link })),
+        ),
+      ];
     },
   });
+
+  api.decorateWidget('breadcrumb:after', (helper) => {
+    helper.widget.appEvents.on('page:changed', () => {
+      helper.widget.scheduleRerender();
+    });
+  });
+
   api.createWidget('sub-nav-links', {
     tagName: 'div.mobile-hidden.navigationWrapper.navigationSlider',
     html() {
@@ -272,7 +296,7 @@
   }
 
   function getBreadCrumb() {
-    return [];
+    return getSubNavLinks().filter((link) => new RegExp(link.href).test(window.location.href));
   }
 </script>
 
