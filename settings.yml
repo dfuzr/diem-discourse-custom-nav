@@ -13,4 +13,4 @@ sub_nav_links:
   default: ''
   client: true
   type: list
-  description: 'Links for the Sub Nav.<br/>Each Link is a JSON object representing the link. Options are:<br/><b>title</b> - string: the link text<br/><b>href</b> - string: the href for the link<br/><b>selected</b> - boolean: Will color link as currently selected link<br/><b>external</b> - boolean: should link target be "_blank" or "_self"<br/><b>visibility</b> - string: One of "public", "members", or "both"<br/><b>subLinks</b> - sub_nav_links[]: Array of child links'
+  description: 'Links for the Sub Nav.<br/>Each Link is a JSON object representing the link. Options are:<br/><b>title</b> - string: the link text<br/><b>href</b> - string: the href for the link<br/><b>selected</b> - boolean: Will color link as currently selected link<br/><b>external</b> - boolean: should link target be "_blank" or "_self"<br/><b>visibility</b> - string: One of "public", "members", or "both"<br/><b>doNotIncludeInBreadcrumb</b> - boolean: if true, item will not appear in breadcrumb<br/><b>subLinks</b> - sub_nav_links[]: Array of child links'
