@@ -13,9 +13,16 @@
     "title": "Community",
     "href": "/",
     "visibility": "public",
-    "doNotIncludeInBreadcrumb": true
+    "doNotIncludeInBreadcrumb": true,
+    "activeScopes": [
+      {
+        "id": "member-portal",
+        "isInactive": true
+      }
+    ]
   },
   {
+    "id": "member-portal",
     "title": "Member Portal",
     "href": "/c/member-portal",
     "visibility": "members",
