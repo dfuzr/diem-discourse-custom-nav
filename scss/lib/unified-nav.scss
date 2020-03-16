@@ -387,7 +387,9 @@ $header-font-color: #39298c;
           a.siteNavItemActive,
           a:hover {
             color: #39298c;
-            text-decoration: underline;
+            @include desktop {
+              text-decoration: none;
+            }
           }
 
           &:not(:first-child) {
