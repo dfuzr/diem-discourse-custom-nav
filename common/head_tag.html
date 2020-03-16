@@ -54,7 +54,6 @@
 
       function addNavLinkClickIntercept() {
         $('#unified-nav a').on('click', function(e) {
-          console.log('intercepting');
           // Uses Discourse to navigate on internal links,
           // not full page loads
           interceptClick(e);

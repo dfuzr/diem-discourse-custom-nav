@@ -11,6 +11,10 @@ body::before {
 
 $header-font-color: #39298c;
 
+.navPusher {
+  height: 60px;
+}
+
 #unified-nav {
   background-color: #fff;
   padding: 0;
@@ -277,8 +281,4 @@ $header-font-color: #39298c;
       }
     }
   }
-}
-
-div[class^='hero'] {
-  padding: calc(2rem + 80px + 80px) 0 10px 0;
 }
