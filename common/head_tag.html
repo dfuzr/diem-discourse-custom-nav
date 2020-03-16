@@ -71,7 +71,7 @@
         $('#unified-nav a').on('click', function(e) {
           // Uses Discourse to navigate on internal links,
           // not full page loads
-          if ($(e.target).closest('.desktop-sub-nav-toggle-container').length === 0) {
+          if (isMobile() || didNotJustClickDesktopSubNavToggle(e)) {
             interceptClick(e);
             closeSingleToggleNav(
               desktopSubNav,
@@ -91,6 +91,10 @@
       addNavLinkClickIntercept();
     });
 
+    function didNotJustClickDesktopSubNavToggle(e) {
+      return $(e.target).closest('.desktop-sub-nav-toggle-container').length === 0;
+    }
+
     function addClickHandlersToMobileNavToggles(navToggles, nav, _isMainNavClick, _isSubNavClick) {
       navToggles.forEach(function(node) {
         $(node).on('click', function() {
@@ -106,7 +110,9 @@
 
     function addClickHandlersToDesktopNavToggle(navToggle, nav) {
       $(navToggle).on('click', (event) => {
-        event.preventDefault();
+        if (!isMobile()) {
+          event.preventDefault();
+        }
         event.stopPropagation();
         const icons = navToggle.querySelectorAll('.desktop-sub-nav-toggle');
         icons.forEach(function(toggle) {
@@ -144,6 +150,10 @@
       if (node) {
         node.classList.toggle(className);
       }
+    }
+
+    function isMobile() {
+      return window.outerWidth < 1024;
     }
   })();
 </script>
