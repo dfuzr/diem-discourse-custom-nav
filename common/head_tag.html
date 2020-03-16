@@ -3,7 +3,6 @@
 
   $(document).ready(function() {
     addBackToTopClickFunctionality();
-    addNavLinkClickIntercept();
   });
 
   function addBackToTopClickFunctionality() {
@@ -13,57 +12,61 @@
     });
   }
 
-  function addNavLinkClickIntercept() {
-    $('#unified-nav a').on('click', function(e) {
-      // Uses Discourse to navigate on internal links,
-      // not full page loads
-      interceptClick(e);
-    });
-  }
-
   (function() {
     let isMainNavClick = false;
     let isSubNavClick = false;
 
     $(document).ready(function() {
-      addClickHandlersToMainNavTriggers();
-      addClickHandlersToSubNavTriggers();
-    });
-
-    function addClickHandlersToMainNavTriggers() {
       const mainNavToggles = document.querySelectorAll('.main-nav .mobile.main-nav-trigger');
       const mainNav = document.querySelector('.main-nav .navigationWrapper.navigationSlider');
-      window.addEventListener('click', function() {
-        if (!isMainNavClick) {
-          closeNav(mainNav, mainNavToggles);
-        }
-        isMainNavClick = false;
-      });
-      if (mainNav) {
-        mainNav.addEventListener('click', function(event) {
-          event.stopPropagation();
-        });
-      }
-
-      addClickHandlersToNavToggles(mainNavToggles, mainNav, true, false);
-    }
-
-    function addClickHandlersToSubNavTriggers() {
       const subNavToggles = document.querySelectorAll('#SubNav .mobile.sub-nav-trigger');
       const subNav = document.querySelector('#SubNav  .navigationWrapper.navigationSlider');
-      window.addEventListener('click', function() {
-        if (!isSubNavClick) {
-          closeNav(subNav, subNavToggles);
+      function addClickHandlersToMainNavTriggers() {
+        window.addEventListener('click', function() {
+          if (!isMainNavClick) {
+            closeNav(mainNav, mainNavToggles);
+          }
+          isMainNavClick = false;
+        });
+        if (mainNav) {
+          mainNav.addEventListener('click', function(event) {
+            event.stopPropagation();
+          });
         }
-        isSubNavClick = false;
-      });
-      if (subNav) {
-        subNav.addEventListener('click', function(event) {
-          event.stopPropagation();
+
+        addClickHandlersToNavToggles(mainNavToggles, mainNav, true, false);
+      }
+
+      function addClickHandlersToSubNavTriggers() {
+        window.addEventListener('click', function() {
+          if (!isSubNavClick) {
+            closeNav(subNav, subNavToggles);
+          }
+          isSubNavClick = false;
+        });
+        if (subNav) {
+          subNav.addEventListener('click', function(event) {
+            event.stopPropagation();
+          });
+        }
+        addClickHandlersToNavToggles(subNavToggles, subNav, false, true);
+      }
+
+      function addNavLinkClickIntercept() {
+        $('#unified-nav a').on('click', function(e) {
+          console.log('intercepting');
+          // Uses Discourse to navigate on internal links,
+          // not full page loads
+          interceptClick(e);
+          closeNav(mainNav, mainNavToggles);
+          closeNav(subNav, subNavToggles);
         });
       }
-      addClickHandlersToNavToggles(subNavToggles, subNav, false, true);
-    }
+
+      addClickHandlersToMainNavTriggers();
+      addClickHandlersToSubNavTriggers();
+      addNavLinkClickIntercept();
+    });
 
     function addClickHandlersToNavToggles(navToggles, nav, _isMainNavClick, _isSubNavClick) {
       navToggles.forEach(function(node) {
