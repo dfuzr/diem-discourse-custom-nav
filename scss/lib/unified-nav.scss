@@ -46,6 +46,7 @@ $header-font-color: #39298c;
     width: 100%;
     max-width: 1400px;
     padding: 0 20px;
+    box-sizing: border-box;
 
     @include desktop {
       display: flex;
@@ -106,6 +107,7 @@ $header-font-color: #39298c;
         align-items: center;
         background-color: transparent;
         margin-bottom: 0;
+        padding: 0;
       }
 
       li {
@@ -113,6 +115,10 @@ $header-font-color: #39298c;
         margin: 0;
         text-align: center;
         white-space: nowrap;
+
+        @include desktop {
+          margin-left: 18px;
+        }
 
         a {
           border: 0;
@@ -132,13 +138,38 @@ $header-font-color: #39298c;
           font-size: 16px;
           line-height: 40px;
 
+          @include desktop {
+            color: #39298c;
+            line-height: 24px;
+            padding: 0.5em 1em;
+            font-size: 14px;
+          }
+
           &:hover,
           &.selected {
             color: #39298c;
+            text-decoration: underline;
+          }
+
+          &.highlight {
+            height: 3.1rem;
+            border-radius: 2.25rem;
+            vertical-align: middle;
+            display: inline-flex;
+            align-items: center;
+            background-color: #42318c;
+            color: #fff;
+            padding: 1em 1.8em;
+            text-shadow: 0.5px 0 0;
+            letter-spacing: 0.5px;
           }
         }
       }
     }
+  }
+
+  a.siteNavItemActive {
+    text-decoration: underline;
   }
 
   .main-nav,
@@ -337,6 +368,13 @@ $header-font-color: #39298c;
             line-height: 15px;
             text-align: right;
             height: 40px;
+
+            @include desktop {
+              font-size: 14px;
+              font-weight: 300;
+              line-height: 15px;
+            }
+
             .desktop-sub-nav-toggle svg {
               color: inherit;
               height: 12px;
@@ -346,6 +384,7 @@ $header-font-color: #39298c;
           a.siteNavItemActive,
           a:hover {
             color: #39298c;
+            text-decoration: underline;
           }
 
           &:not(:first-child) {

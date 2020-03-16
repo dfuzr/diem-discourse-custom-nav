@@ -26,6 +26,10 @@ $avatar-image-size: 1.8em;
     display: flex;
     justify-content: space-between;
 
+    @include desktop {
+      background-color: none;
+    }
+
     .contents {
       max-width: 1110px;
       width: 100%;
