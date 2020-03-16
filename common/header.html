@@ -1,5 +1,4 @@
 <script type="text/discourse-plugin" version="0.8.20">
-  const container = Discourse.__container__;
   const { h } = require('virtual-dom');
 
   function isCurrentUserMember() {
@@ -61,21 +60,25 @@
   });
 
   api.createWidget('custom-link', {
-    tagName: 'span.fill',
-    html(attrs) {
-      const { external, href, contents = () => [], classNames = [] } = attrs;
-      const classes = classNames.length ? `.${classNames.join('.')}` : '';
-      return h(
-        `a${classes}`,
-        {
-          attributes: {
-            href,
-            target: external ? '_blank' : '_self',
-          },
-        },
-        contents(),
-      );
+    tagName: 'a',
+    buildClasses({ classNames = [] }) {
+      return ['custom-link'].concat(classNames);
     },
+    buildAttributes(attrs) {
+      const { external, href, title } = attrs;
+      const ret = {
+        href,
+        title,
+      };
+      if (external) {
+        ret.target = '_blank';
+      }
+      return ret;
+    },
+    html(attrs) {
+      const { contents = () => [] } = attrs;
+      return contents();
+    }
   });
 
   /*

@@ -11,8 +11,9 @@
   },
   {
     "title": "Community",
-    "href": "https://community.libra.org/",
-    "visibility": "public"
+    "href": "/",
+    "visibility": "public",
+    "doNotIncludeInBreadcrumb": true
   },
   {
     "title": "Member Portal",

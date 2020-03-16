@@ -1,12 +1,23 @@
 <script>
+  const interceptClick = require('discourse/lib/intercept-click').default;
+
   $(document).ready(function() {
     addBackToTopClickFunctionality();
+    addNavLinkClickIntercept();
   });
 
   function addBackToTopClickFunctionality() {
     const backToTop = $('.d-header #back-to-top');
     backToTop.on('click', function(event) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  function addNavLinkClickIntercept() {
+    $('#unified-nav a').on('click', function(e) {
+      // Uses Discourse to navigate on internal links,
+      // not full page loads
+      interceptClick(e);
     });
   }
 
