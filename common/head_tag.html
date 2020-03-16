@@ -15,16 +15,21 @@
   (function() {
     let isMainNavClick = false;
     let isSubNavClick = false;
+    let isDesktopSubNavClick = false;
 
     $(document).ready(function() {
       const mainNavToggles = document.querySelectorAll('.main-nav .mobile.main-nav-trigger');
       const mainNav = document.querySelector('.main-nav .navigationWrapper.navigationSlider');
       const subNavToggles = document.querySelectorAll('#SubNav .mobile.sub-nav-trigger');
-      const subNav = document.querySelector('#SubNav  .navigationWrapper.navigationSlider');
+      const subNav = document.querySelector('#SubNav .navigationWrapper.navigationSlider');
+
+      const $desktopSubNavToggles = $('#SubNav .desktop-sub-nav-toggle');
+      const $desktopSubNav = $('#SubNav .sub-sub-nav-links');
+
       function addClickHandlersToMainNavTriggers() {
         window.addEventListener('click', function() {
           if (!isMainNavClick) {
-            closeNav(mainNav, mainNavToggles);
+            closeNav(mainNav, mainNavToggles, 'mobile-hidden');
           }
           isMainNavClick = false;
         });
@@ -34,13 +39,13 @@
           });
         }
 
-        addClickHandlersToNavToggles(mainNavToggles, mainNav, true, false);
+        addClickHandlersToMobileNavToggles(mainNavToggles, mainNav, true, false);
       }
 
       function addClickHandlersToSubNavTriggers() {
         window.addEventListener('click', function() {
           if (!isSubNavClick) {
-            closeNav(subNav, subNavToggles);
+            closeNav(subNav, subNavToggles, 'mobile-hidden');
           }
           isSubNavClick = false;
         });
@@ -49,54 +54,90 @@
             event.stopPropagation();
           });
         }
-        addClickHandlersToNavToggles(subNavToggles, subNav, false, true);
+        addClickHandlersToMobileNavToggles(subNavToggles, subNav, false, true);
+      }
+
+      function addClickHandlersToDesktopSubNavToggles() {
+        console.log('addClickHandlersToDesktopSubNavToggles');
+        window.addEventListener('click', function() {
+          if (!isDesktopSubNavClick) {
+            closeNav($desktopSubNav[0], $desktopSubNavToggles.toArray(), 'mobile');
+          }
+          isDesktopSubNavClick = false;
+        });
+        if ($desktopSubNav.length) {
+          $desktopSubNav.on('click', function(event) {
+            console.log('clicked Desktop toggle');
+            event.stopPropagation();
+            event.preventDefault();
+          });
+        }
+        addClickHandlersToDesktopNavToggles($desktopSubNavToggles, $desktopSubNav);
       }
 
       function addNavLinkClickIntercept() {
         $('#unified-nav a').on('click', function(e) {
           // Uses Discourse to navigate on internal links,
           // not full page loads
-          interceptClick(e);
-          closeNav(mainNav, mainNavToggles);
-          closeNav(subNav, subNavToggles);
+
+          if ($(e.target).closest('.desktop-sub-nav-toggle').length === 0) {
+            interceptClick(e);
+            closeNav($desktopSubNav, $desktopSubNavToggles, 'mobile');
+          }
+          closeNav(mainNav, mainNavToggles, 'mobile-hidden');
+          closeNav(subNav, subNavToggles, 'mobile-hidden');
         });
       }
 
       addClickHandlersToMainNavTriggers();
       addClickHandlersToSubNavTriggers();
+      addClickHandlersToDesktopSubNavToggles();
       addNavLinkClickIntercept();
     });
 
-    function addClickHandlersToNavToggles(navToggles, nav, _isMainNavClick, _isSubNavClick) {
+    function addClickHandlersToMobileNavToggles(navToggles, nav, _isMainNavClick, _isSubNavClick) {
       navToggles.forEach(function(node) {
         node.addEventListener('click', function() {
           isMainNavClick = _isMainNavClick;
           isSubNavClick = _isSubNavClick;
           navToggles.forEach(function(toggle) {
-            toggleVisibility(toggle);
-            toggle.classList.contains('trigger-open');
+            toggleVisibility(toggle, 'mobile-hidden');
           });
-          toggleVisibility(nav);
+          toggleVisibility(nav, 'mobile-hidden');
         });
       });
     }
 
-    function toggleVisibility(node) {
+    function addClickHandlersToDesktopNavToggles($navToggles, $nav) {
+      console.log('addClickHandlersToDesktopNavToggles', $navToggles, $nav);
+      $navToggles.each(function(i, node) {
+        $(node).on('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          $navToggles.each(function(i, toggle) {
+            toggleVisibility(toggle, 'mobile');
+          });
+          toggleVisibility($nav[0], 'mobile');
+        });
+      });
+    }
+
+    function toggleVisibility(node, className) {
       if (node) {
-        node.classList.toggle('mobile-hidden');
+        node.classList.toggle(className);
       }
     }
 
-    function closeNav(nav, navToggles) {
+    function closeNav(nav, navToggles, className) {
       navToggles.forEach(function(toggle) {
         if (toggle.classList.contains('trigger-open')) {
-          toggle.classList.remove('mobile-hidden');
+          toggle.classList.remove(className);
         } else {
-          toggle.classList.add('mobile-hidden');
+          toggle.classList.add(className);
         }
       });
       if (nav) {
-        nav.classList.add('mobile-hidden');
+        nav.classList.add(className);
       }
     }
   })();

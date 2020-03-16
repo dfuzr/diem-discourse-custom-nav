@@ -1,5 +1,6 @@
 <script type="text/discourse-plugin" version="0.8.20">
   const { h } = require('virtual-dom');
+  const { iconNode } = require('discourse-common/lib/icon-library');
 
   function isCurrentUserMember() {
     const user = api.getCurrentUser() || {};
@@ -255,10 +256,20 @@
         return Object.assign({}, link, { classNames, contents });
       });
       return processedLinks.map((link) => {
+        if (link.subLinks && Array.isArray(link.subLinks)) {
+          const contents = link.contents;
+          link.contents = () => [
+            contents(),
+            h('span.desktop-sub-nav-toggle.trigger-open.mobile-hidden', [iconNode('chevron-down')]),
+            h('span.desktop-sub-nav-toggle.trigger-closed.mobile.mobile-hidden', [
+              iconNode('chevron-up'),
+            ]),
+          ];
+        }
         const linkContent = [this.attach('custom-link', link)];
         if (link.subLinks && Array.isArray(link.subLinks)) {
           linkContent.push(
-            h('div.sub-sub-nav-links', [
+            h('div.sub-sub-nav-links.mobile', [
               h('div.nav-triangle.mobile-hidden'),
               this.attach('sub-nav-links-list', { links: link.subLinks }),
             ]),
