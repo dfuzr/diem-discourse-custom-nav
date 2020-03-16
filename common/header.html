@@ -78,7 +78,7 @@
     html(attrs) {
       const { contents = () => [] } = attrs;
       return contents();
-    }
+    },
   });
 
   /*
@@ -146,6 +146,7 @@
   });
 
   api.createWidget('main-nav-toggles', {
+    tagName: 'div.mobile',
     buildKey: () => 'main-nav-toggles',
     html() {
       const openSrc = settings.theme_uploads && settings.theme_uploads['open-main-nav-icon'];
@@ -208,7 +209,9 @@
     tagName: 'div.main-nav',
     buildKey: () => 'main-nav',
     html() {
-      return h('div.wrapper.wrap', [this.attach('logo-container'), this.attach('main-nav-links')]);
+      return h('div.wrapper.wrap', [
+        h('div.main-nav-container', [this.attach('logo-container'), this.attach('main-nav-links')]),
+      ]);
     },
   });
 
@@ -246,7 +249,7 @@
       const processedLinks = links.map((link) => {
         const classNames = [];
         const contents = () => link.title;
-        if (isLinkCurrentPageForBreadCrumb(link)) {
+        if (linkCanBeActive(link, links) && isLinkActive(link)) {
           classNames.push('siteNavItemActive');
         }
         return Object.assign({}, link, { classNames, contents });
@@ -254,7 +257,12 @@
       return processedLinks.map((link) => {
         const linkContent = [this.attach('custom-link', link)];
         if (link.subLinks && Array.isArray(link.subLinks)) {
-          linkContent.push(this.attach('sub-nav-links-list', { links: link.subLinks }));
+          linkContent.push(
+            h('div.sub-sub-nav-links', [
+              h('div.nav-triangle.mobile-hidden'),
+              this.attach('sub-nav-links-list', { links: link.subLinks }),
+            ]),
+          );
         }
         return h('li', linkContent);
       });
@@ -276,7 +284,7 @@
   });
 
   api.createWidget('sub-nav-toggles', {
-    tagName: 'div',
+    tagName: 'div.mobile',
     buildKey: () => 'sub-nav-toggles',
     html() {
       const openSrc = settings.theme_uploads && settings.theme_uploads['open-sub-nav-icon'];
@@ -328,14 +336,14 @@
     tagName: 'div.navPusher',
     html() {
       return [];
-    }
+    },
   });
 
   api.createWidget('libra-discourse-custom-nav', {
     tagName: 'div.libra-discourse-custom-nav',
     html() {
       return [this.attach('unified-nav'), this.attach('nav-pusher')];
-    }
+    },
   });
 
   function getMainNavLinks() {
@@ -375,18 +383,42 @@
     return false;
   }
 
-  function isLinkCurrentPageForBreadCrumb(link) {
+  function linkCanBeActive(link, links = []) {
+    if (!link.activeScopes || !Array.isArray(link.activeScopes)) {
+      return true;
+    }
     return (
-      !link.doNotIncludeInBreadcrumb &&
-      (new RegExp(link.href).test(window.location.href) || shouldIncludeInBreadcrumbOnPaths(link))
+      link.activeScopes.filter(({ id, isInactive, isActive }) => {
+        // returning true keeps item in list.
+        // any item kept in the list are blocking items.
+        const otherLink = links.find((i) => i.id === id);
+        console.log(id, otherLink);
+        if (!otherLink) {
+          return false;
+        }
+        const isOtherLinkActive = isLinkActive(otherLink);
+        console.log('isOtherLinkActive', isOtherLinkActive);
+        console.log('isInactive', isInactive);
+        // if otherLink should be inActive but is currently active
+        if (isInactive && isOtherLinkActive) {
+          return true;
+        }
+        // if otherLink should be active but is currently inActive
+        if (isActive && !isOtherLinkActive) {
+          return true;
+        }
+        return false;
+      }).length === 0
     );
+  }
+
+  function isLinkCurrentPage(link) {
+    return new RegExp(link.href).test(window.location.href);
   }
 
   function isChildLinkCurrentPage(link) {
     return (
-      link.subLinks &&
-      Array.isArray(link.subLinks) &&
-      link.subLinks.filter(isLinkCurrentPageForBreadCrumb).length
+      link.subLinks && Array.isArray(link.subLinks) && link.subLinks.filter(isLinkCurrentPage).length
     );
   }
 
@@ -403,9 +435,17 @@
     return flattenedFirst.concat(flattenedRest);
   }
 
+  function isLinkActive(link) {
+    return (
+      shouldIncludeInBreadcrumbOnPaths(link) ||
+      isLinkCurrentPage(link) ||
+      isChildLinkCurrentPage(link)
+    );
+  }
+
   function getBreadCrumb() {
     return flattenLinks(getSubNavLinks()).filter((link) => {
-      return isLinkCurrentPageForBreadCrumb(link) || isChildLinkCurrentPage(link);
+      return !link.doNotIncludeInBreadcrumb && isLinkActive(link);
     });
   }
 </script>
