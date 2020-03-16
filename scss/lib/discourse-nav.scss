@@ -8,11 +8,6 @@ $desktop-avatar-image-size: 2.1em;
 .drop-down-mode .d-header-icons .active .icon::after {
   top: -1px;
 }
-@include desktop {
-  .docked .d-header {
-    position: absolute;
-  }
-}
 
 .d-header {
   font-size: 12px;
@@ -174,7 +169,6 @@ $desktop-avatar-image-size: 2.1em;
 
 @include desktop {
   .d-header {
-    position: absolute;
     .wrap {
       position: relative;
       display: flex;
@@ -182,7 +176,12 @@ $desktop-avatar-image-size: 2.1em;
       border: none;
     }
     > .wrap {
-      max-width: 1186px;
+      max-width: 1125px;
+    }
+  }
+  .category-member-portal {
+    .d-header > .wrap {
+      max-width: 1202px;
     }
   }
 }
