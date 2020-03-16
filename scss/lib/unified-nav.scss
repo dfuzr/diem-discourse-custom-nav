@@ -152,16 +152,20 @@ $header-font-color: #39298c;
           }
 
           &.highlight {
-            height: 3.1rem;
             border-radius: 2.25rem;
             vertical-align: middle;
             display: inline-flex;
             align-items: center;
             background-color: #42318c;
             color: #fff;
-            padding: 1em 1.8em;
+            padding: 0.8em 1.8em;
             text-shadow: 0.5px 0 0;
             letter-spacing: 0.5px;
+            display: inline-block !important;
+            box-sizing: border-box;
+            min-height: 48px;
+            max-height: 48px;
+            line-height: 26px;
           }
         }
       }
@@ -371,7 +375,6 @@ $header-font-color: #39298c;
 
             @include desktop {
               font-size: 14px;
-              font-weight: 300;
               line-height: 15px;
             }
 
@@ -400,6 +403,8 @@ $header-font-color: #39298c;
 
           @include desktop {
             position: relative;
+            margin-left: 0px;
+
             .sub-sub-nav-links {
               position: absolute;
               top: 53px;
