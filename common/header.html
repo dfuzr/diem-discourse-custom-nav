@@ -265,6 +265,7 @@
               iconNode('chevron-up'),
             ]),
           ];
+          link.classNames.push('desktop-sub-nav-toggle-container');
         }
         const linkContent = [this.attach('custom-link', link)];
         if (link.subLinks && Array.isArray(link.subLinks)) {
@@ -403,13 +404,10 @@
         // returning true keeps item in list.
         // any item kept in the list are blocking items.
         const otherLink = links.find((i) => i.id === id);
-        console.log(id, otherLink);
         if (!otherLink) {
           return false;
         }
         const isOtherLinkActive = isLinkActive(otherLink);
-        console.log('isOtherLinkActive', isOtherLinkActive);
-        console.log('isInactive', isInactive);
         // if otherLink should be inActive but is currently active
         if (isInactive && isOtherLinkActive) {
           return true;
