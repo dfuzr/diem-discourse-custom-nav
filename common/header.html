@@ -324,6 +324,20 @@
     });
   });
 
+  api.createWidget('nav-pusher', {
+    tagName: 'div.navPusher',
+    html() {
+      return [];
+    }
+  });
+
+  api.createWidget('libra-discourse-custom-nav', {
+    tagName: 'div.libra-discourse-custom-nav',
+    html() {
+      return [this.attach('unified-nav'), this.attach('nav-pusher')];
+    }
+  });
+
   function getMainNavLinks() {
     return convertAndErrorCheckSettingsLinks(settings.main_nav_links);
   }
@@ -396,6 +410,9 @@
   }
 </script>
 
-<script type="text/x-handlebars" data-template-name="/connectors/above-site-header/unified-nav">
-  {{mount-widget widget="unified-nav"}}
+<script
+  type="text/x-handlebars"
+  data-template-name="/connectors/above-site-header/libra-discourse-custom-nav"
+>
+  {{mount-widget widget="libra-discourse-custom-nav"}}
 </script>
