@@ -30,39 +30,16 @@
       const desktopSubNav = document.querySelector('#SubNav .sub-sub-nav-links');
 
       function addClickHandlersToMainNavTriggers() {
-        window.addEventListener('click', function() {
-          if (!isMainNavClick) {
-            closeNav(mainNav, mainNavToggles, 'mobile-hidden');
-          }
-          isMainNavClick = false;
-        });
         stopPropagation(mainNav);
         addClickHandlersToMobileNavToggles(mainNavToggles, mainNav, true, false);
       }
 
       function addClickHandlersToSubNavTriggers() {
-        window.addEventListener('click', function() {
-          if (!isSubNavClick) {
-            closeNav(subNav, subNavToggles, 'mobile-hidden');
-          }
-          isSubNavClick = false;
-        });
         stopPropagation(subNav);
         addClickHandlersToMobileNavToggles(subNavToggles, subNav, false, true);
       }
 
       function addClickHandlersToDesktopSubNavToggle() {
-        window.addEventListener('click', function() {
-          if (!isDesktopSubNavClick) {
-            closeSingleToggleNav(
-              desktopSubNav,
-              desktopSubNavToggle,
-              'mobile',
-              '.desktop-sub-nav-toggle',
-            );
-          }
-          isDesktopSubNavClick = false;
-        });
         stopPropagation(desktopSubNav);
         addClickHandlersToDesktopNavToggle(desktopSubNavToggle, desktopSubNav);
       }
@@ -85,10 +62,39 @@
         });
       }
 
+      function addCloseMenuClickHandlers() {
+        window.addEventListener('click', () => {
+          if (!isMainNavClick && !isSubNavClick && !isDesktopSubNavClick) {
+            $('body').removeClass('menu-open');
+          }
+
+          if (!isMainNavClick) {
+            closeNav(mainNav, mainNavToggles, 'mobile-hidden');
+          }
+          isMainNavClick = false;
+
+          if (!isSubNavClick) {
+            closeNav(subNav, subNavToggles, 'mobile-hidden');
+          }
+          isSubNavClick = false;
+
+          if (!isDesktopSubNavClick) {
+            closeSingleToggleNav(
+              desktopSubNav,
+              desktopSubNavToggle,
+              'mobile',
+              '.desktop-sub-nav-toggle',
+            );
+          }
+          isDesktopSubNavClick = false;
+        });
+      }
+
       addClickHandlersToMainNavTriggers();
       addClickHandlersToSubNavTriggers();
       addClickHandlersToDesktopSubNavToggle();
       addNavLinkClickIntercept();
+      addCloseMenuClickHandlers();
     });
 
     function didNotJustClickDesktopSubNavToggle(e) {
@@ -98,6 +104,7 @@
     function addClickHandlersToMobileNavToggles(navToggles, nav, _isMainNavClick, _isSubNavClick) {
       navToggles.forEach(function(node) {
         $(node).on('click', function() {
+          $('body').addClass('menu-open');
           isMainNavClick = _isMainNavClick;
           isSubNavClick = _isSubNavClick;
           navToggles.forEach(function(toggle) {
@@ -110,6 +117,7 @@
 
     function addClickHandlersToDesktopNavToggle(navToggle, nav) {
       $(navToggle).on('click', (event) => {
+        $('body').addClass('menu-open');
         if (!isMobile()) {
           event.preventDefault();
         }
@@ -147,6 +155,9 @@
     }
 
     function toggleVisibility(node, className) {
+      if ($(node).hasClass('trigger-open') && $(node).hasClass(className)) {
+        $('body').removeClass('menu-open');
+      }
       if (node) {
         node.classList.toggle(className);
       }
