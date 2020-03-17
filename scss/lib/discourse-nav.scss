@@ -9,15 +9,21 @@ $desktop-avatar-image-size: 2.1em;
   top: -1px;
 }
 
+.menu-open .d-header {
+  z-index: 1;
+}
+
 .d-header {
   font-size: 12px;
   position: fixed;
   margin: 0;
   height: 0;
+  z-index: 9999;
 
   @include desktop {
     display: flex;
     justify-content: center;
+    z-index: 999;
   }
 
   .wrap {
@@ -43,6 +49,12 @@ $desktop-avatar-image-size: 2.1em;
         width: unset;
         position: absolute;
         top: 180px;
+      }
+      .extra-info-wrapper {
+        display: none;
+        + .panel .d-header-icons {
+          display: block;
+        }
       }
     }
 
