@@ -114,13 +114,32 @@ $desktop-avatar-image-size: 2.1em;
     flex: 1 1 auto;
     margin-left: 0;
     justify-content: flex-end;
+    @include desktop {
+      background-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 2px 2px 40px 10px rgba(0, 0, 0, 0.05);
+    }
   }
 
   .header-buttons:not(:empty) {
     margin: 0;
-    order: 1;
-    margin-left: 3px;
+    margin-left: 6px;
     justify-content: flex-end;
+
+    .btn-primary {
+      @include desktop {
+        background: none;
+        color: $header-primary;
+        font-size: 15px;
+        padding: 6px;
+        // margin: 0;
+        > span {
+          font-size: inherit;
+        }
+        > svg {
+          color: inherit;
+        }
+      }
+    }
   }
 
   .sign-up-button,
@@ -142,11 +161,10 @@ $desktop-avatar-image-size: 2.1em;
 }
 
 .d-header-icons {
-  flex: 0 0 auto;
   @include desktop {
-    background-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 2px 2px 40px 10px rgba(0, 0, 0, 0.05);
+    margin: 0;
   }
+  flex: 0 0 auto;
   .icon {
     width: 34px;
     box-sizing: border-box;
