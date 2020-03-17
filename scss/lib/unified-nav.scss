@@ -59,6 +59,11 @@ $header-font-color: #39298c;
 
   .navigationWrapper.navigationSlider {
     height: unset;
+    margin-top: 46px;
+
+    @include desktop {
+      margin-top: 0;
+    }
   }
 
   .navigationSlider .slidingNav {
@@ -139,7 +144,7 @@ $header-font-color: #39298c;
           line-height: 40px;
 
           @include desktop {
-            color: #39298c;
+            color: $header-font-color;
             line-height: 24px;
             padding: 0.5em 1em;
             font-size: 14px;
@@ -147,8 +152,10 @@ $header-font-color: #39298c;
 
           &:hover,
           &.selected {
-            color: #39298c;
-            text-decoration: underline;
+            color: $header-font-color;
+            @include desktop {
+              text-decoration: underline;
+            }
           }
 
           &.highlight {
@@ -161,19 +168,17 @@ $header-font-color: #39298c;
             padding: 0.8em 1.8em;
             text-shadow: 0.5px 0 0;
             letter-spacing: 0.5px;
-            display: inline-block !important;
             box-sizing: border-box;
             min-height: 48px;
             max-height: 48px;
             line-height: 26px;
+            @include desktop {
+              display: inline-block !important;
+            }
           }
         }
       }
     }
-  }
-
-  a.siteNavItemActive {
-    text-decoration: underline;
   }
 
   .main-nav,
@@ -349,93 +354,99 @@ $header-font-color: #39298c;
       }
     }
 
-    .navigationSlider .slidingNav {
-      margin-top: 30px;
-      @include desktop {
-        margin-top: 0;
-        height: inherit;
-        > ul {
+    .navigationSlider {
+      margin-top: 0;
+      .slidingNav {
+        margin-top: 30px;
+        @include desktop {
+          margin-top: 0;
           height: inherit;
+          > ul {
+            height: inherit;
+          }
         }
-      }
 
-      ul {
-        align-items: flex-start;
-        margin-top: 0;
+        ul {
+          align-items: flex-start;
+          margin-top: 0;
 
-        li {
-          a {
-            background-color: transparent;
-            color: #000000;
-            font-size: 16px;
-            font-weight: 400;
-            line-height: 15px;
-            text-align: right;
-            height: 40px;
-
-            @include desktop {
-              font-size: 14px;
+          li {
+            a {
+              background-color: transparent;
+              color: #000000;
+              font-size: 16px;
+              font-weight: 400;
               line-height: 15px;
-            }
+              text-align: right;
+              height: 40px;
 
-            .desktop-sub-nav-toggle svg {
-              color: inherit;
-              height: 12px;
-            }
-          }
-
-          a.siteNavItemActive,
-          a:hover {
-            color: #39298c;
-            @include desktop {
-              text-decoration: none;
-            }
-          }
-
-          &:not(:first-child) {
-            margin-left: 0px;
-          }
-
-          ul {
-            border-bottom: none;
-            padding: 0 1rem;
-            margin-bottom: 0;
-            flex-direction: column;
-          }
-
-          @include desktop {
-            position: relative;
-            margin-left: 0px;
-
-            .sub-sub-nav-links {
-              position: absolute;
-              top: 53px;
-              right: -50%;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-
-              div.nav-triangle {
-                height: 15px;
-                width: 15px;
-                transform: rotate(45deg);
-                border-radius: 1px;
-                background-color: #ffffff;
-                margin-bottom: -7.5px;
-                position: relative;
-                z-index: 99999;
+              @include desktop {
+                font-size: 14px;
+                line-height: 15px;
               }
-              ul {
-                background-color: #fff;
-                padding: 35px;
-                padding-top: 20px;
-                padding-right: 100px;
-                box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.2);
-                border-radius: 5px;
-                width: unset;
-                li {
-                  height: 29px;
-                  line-height: 29px;
+
+              .desktop-sub-nav-toggle svg {
+                color: inherit;
+                height: 12px;
+              }
+            }
+
+            a.siteNavItemActive,
+            a:hover {
+              color: $header-font-color;
+            }
+
+            a.siteNavItemActive {
+              @include desktop {
+                text-decoration: none;
+              }
+            }
+
+            &:not(:first-child) {
+              margin-left: 0px;
+            }
+
+            ul {
+              border-bottom: none;
+              padding: 0 1rem;
+              margin-bottom: 0;
+              flex-direction: column;
+            }
+
+            @include desktop {
+              position: relative;
+              margin-left: 0px;
+
+              .sub-sub-nav-links {
+                position: absolute;
+                top: 53px;
+                right: -50%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                div.nav-triangle {
+                  height: 15px;
+                  width: 15px;
+                  transform: rotate(45deg);
+                  border-radius: 1px;
+                  background-color: #ffffff;
+                  margin-bottom: -7.5px;
+                  position: relative;
+                  z-index: 99999;
+                }
+                ul {
+                  background-color: #fff;
+                  padding: 35px;
+                  padding-top: 20px;
+                  padding-right: 100px;
+                  box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.2);
+                  border-radius: 5px;
+                  width: unset;
+                  li {
+                    height: 29px;
+                    line-height: 29px;
+                  }
                 }
               }
             }
