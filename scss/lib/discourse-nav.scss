@@ -238,9 +238,6 @@ $desktop-avatar-image-size: 2.1em;
 
 @include desktop {
   .alert.alert-info {
-    margin-top: 50px;
-    &.alert-too-few-topics {
-      margin-top: 35px;
-    }
+    margin-top: 35px;
   }
 }
