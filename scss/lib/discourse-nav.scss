@@ -236,8 +236,11 @@ $desktop-avatar-image-size: 2.1em;
   }
 }
 
-.consent_banner.alert.alert-info {
-  @include desktop {
+@include desktop {
+  .alert.alert-info {
     margin-top: 50px;
+    &.alert-too-few-topics {
+      margin-top: 35px;
+    }
   }
 }
