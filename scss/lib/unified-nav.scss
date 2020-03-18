@@ -12,10 +12,10 @@ body::before {
 $header-font-color: #39298c;
 
 .navPusher {
-  height: 60px;
+  height: 120px;
 
   @include desktop {
-    height: 80px;
+    height: 140px;
   }
 }
 
@@ -464,4 +464,12 @@ $header-font-color: #39298c;
       display: none !important;
     }
   }
+}
+
+.modal-backdrop {
+  z-index: 9999;
+}
+
+.fixed-modal {
+  z-index: 10000;
 }
