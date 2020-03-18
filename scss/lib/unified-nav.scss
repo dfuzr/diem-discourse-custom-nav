@@ -12,10 +12,10 @@ body::before {
 $header-font-color: #39298c;
 
 .navPusher {
-  height: 120px;
+  height: 60px;
 
   @include desktop {
-    height: 140px;
+    height: 100px;
   }
 }
 
