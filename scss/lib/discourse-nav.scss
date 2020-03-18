@@ -28,7 +28,11 @@ $desktop-avatar-image-size: 2.1em;
 
   .wrap {
     position: fixed;
-    bottom: env(safe-area-inset-bottom, 0);
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: env(safe-area-inset-bottom);
     background-color: $header-background;
     border-top: 1px solid #e5e5e5;
     height: 40px;
