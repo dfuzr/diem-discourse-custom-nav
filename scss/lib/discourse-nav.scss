@@ -159,12 +159,14 @@ $desktop-avatar-image-size: 2.1em;
     }
   }
 
-  button.sign-up-button,
-  button.login-button {
-    display: block;
-    span {
-      font-size: 0.6rem;
-      font-weight: 600;
+  .header-buttons {
+    button.sign-up-button,
+    button.login-button {
+      display: block;
+      span {
+        font-size: 0.6rem;
+        font-weight: 600;
+      }
     }
   }
 }
