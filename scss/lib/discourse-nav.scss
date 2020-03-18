@@ -159,8 +159,8 @@ $desktop-avatar-image-size: 2.1em;
     }
   }
 
-  .sign-up-button,
-  .login-button {
+  button.sign-up-button,
+  button.login-button {
     display: block;
     span {
       font-size: 0.6rem;
