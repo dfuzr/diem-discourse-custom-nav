@@ -453,8 +453,9 @@
   }
 
   function getBreadCrumb() {
-    return flattenLinks(getSubNavLinks()).filter((link) => {
-      return !link.doNotIncludeInBreadcrumb && isLinkActive(link);
+    const links = flattenLinks(getSubNavLinks());
+    return links.filter((link) => {
+      return !link.doNotIncludeInBreadcrumb && linkCanBeActive(link, links) && isLinkActive(link);
     });
   }
 
