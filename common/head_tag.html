@@ -1,8 +1,16 @@
 <script>
   const interceptClick = require('discourse/lib/intercept-click').default;
+  const { withPluginApi } = require('discourse/lib/plugin-api');
+
+  withPluginApi('0.8.37', function(api) {
+    api.onPageChange(() => {
+      positionDiscourseNavDesktop();
+    });
+  });
 
   $(document).ready(function() {
     addBackToTopClickFunctionality();
+    positionDiscourseNavDesktop();
   });
 
   function addBackToTopClickFunctionality() {
@@ -10,6 +18,22 @@
     backToTop.on('click', function(event) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+  }
+
+  function positionDiscourseNavDesktop() {
+    const $staffBanner = $('.user-main .staff-counters');
+    const $alertBanner = $('.alert.alert-info');
+    if ($alertBanner.length) {
+      $('.d-header .contents').addClass('with-banner');
+      $alertBanner.on('click', 'button.close', function(event) {
+        $('.d-header .contents').removeClass('with-banner');
+      });
+    }
+    if ($staffBanner.length) {
+      $('.d-header .contents').addClass('with-staff-banner');
+    } else {
+      $('.d-header .contents').removeClass('with-staff-banner');
+    }
   }
 
   (function() {
@@ -63,7 +87,7 @@
       }
 
       function addCloseMenuClickHandlers() {
-        window.addEventListener('click', () => {
+        window.addEventListener('click', function() {
           if (!isMainNavClick && !isSubNavClick && !isDesktopSubNavClick) {
             $('body').removeClass('menu-open');
           }
@@ -116,7 +140,7 @@
     }
 
     function addClickHandlersToDesktopNavToggle(navToggle, nav) {
-      $(navToggle).on('click', (event) => {
+      $(navToggle).on('click', function(event) {
         $('body').addClass('menu-open');
         if (!isMobile()) {
           event.preventDefault();
@@ -149,7 +173,7 @@
     }
 
     function stopPropagation(nav) {
-      $(nav).on('click', (event) => {
+      $(nav).on('click', function(event) {
         event.stopPropagation();
       });
     }

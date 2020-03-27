@@ -53,6 +53,13 @@ $desktop-avatar-image-size: 2.1em;
         width: unset;
         position: absolute;
         top: 180px;
+        &.with-staff-banner,
+        &.with-banner {
+          top: 233px;
+        }
+        &.with-banner.with-staff-banner {
+          top: 284px;
+        }
       }
       .extra-info-wrapper {
         display: none;
@@ -244,6 +251,21 @@ $desktop-avatar-image-size: 2.1em;
 
 @include desktop {
   .alert.alert-info {
+    margin-top: 0px;
+  }
+  .list-controls,
+  .user-main .about.collapsed-info .controls {
+    margin-right: 136px;
+  }
+
+  .category-header .list-controls {
+    margin-right: 0px;
+  }
+
+  .user-main .about.collapsed-info .controls {
+    margin-top: 0px;
+  }
+  .user-main .about .controls {
     margin-top: 35px;
   }
 }
