@@ -1,0 +1,29 @@
+.ios-device {
+  .d-header {
+    .wrap:after {
+      background-color: #fff;
+      background-color: rgba(var(--cdc, 255, 255, 255), 1);
+      content: '';
+      height: env(safe-area-inset-bottom);
+      left: 0;
+      position: fixed;
+      right: 0;
+      display: block;
+    }
+    .menu-panel.slide-in,
+    .menu-panel {
+      bottom: 0 !important;
+    }
+  }
+}
+
+.d-header {
+  .menu-panel.slide-in,
+  .menu-panel {
+    bottom: 0 !important;
+  }
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+}

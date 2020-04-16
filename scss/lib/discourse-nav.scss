@@ -1,0 +1,271 @@
+@import 'common/foundation/variables';
+@import 'theme_variables';
+@import 'lib/mixins';
+
+$mobile-avatar-image-size: 1.8em;
+$desktop-avatar-image-size: 2.1em;
+
+.drop-down-mode .d-header-icons .active .icon::after {
+  top: -1px;
+}
+
+.menu-open .d-header {
+  z-index: 1;
+}
+
+.d-header {
+  font-size: 12px;
+  position: fixed;
+  margin: 0;
+  height: 0;
+  z-index: 9999;
+
+  @include desktop {
+    display: flex;
+    justify-content: center;
+    z-index: 999;
+  }
+
+  .wrap {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: env(safe-area-inset-bottom);
+    background-color: $header-background;
+    border-top: 1px solid #e5e5e5;
+    height: 40px;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+
+    @include desktop {
+      max-width: 1400px;
+    }
+
+    .contents {
+      max-width: 1110px;
+      width: 100%;
+      @include desktop {
+        width: unset;
+        position: absolute;
+        top: 180px;
+        &.with-staff-banner,
+        &.with-banner {
+          top: 233px;
+        }
+        &.with-banner.with-staff-banner {
+          top: 284px;
+        }
+      }
+      .extra-info-wrapper {
+        display: none;
+        + .panel .d-header-icons {
+          display: block;
+        }
+      }
+    }
+
+    .title {
+      #back-to-top {
+        color: $header-primary;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        .arrow-up-icon {
+          margin-left: 6px;
+        }
+        @include desktop {
+          display: none;
+        }
+      }
+
+      a {
+        display: none;
+      }
+    }
+  }
+
+  .menu-panel.slide-in,
+  .menu-panel {
+    top: unset !important;
+    bottom: 40px;
+    box-shadow: 0 -12px 12px rgba(0, 0, 0, 0.15);
+
+    @include desktop {
+      bottom: unset;
+      top: 100% !important;
+      box-shadow: 0 12px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .panel-body {
+      height: 100% !important;
+    }
+  }
+
+  .d-header-icons {
+    .active .icon {
+      position: relative;
+      background-color: #fff;
+      cursor: default;
+      border-top: 1px solid #e6e6e6;
+      border-left: 1px solid #e6e6e6;
+      border-right: 1px solid #e6e6e6;
+      &::after {
+        display: block;
+        position: absolute;
+        top: -2px;
+        left: 0;
+        z-index: 1001;
+        width: 100%;
+        height: 0;
+        content: '';
+        border-top: 2px solid #fff;
+        @include desktop {
+          top: 100%;
+        }
+      }
+    }
+  }
+
+  .panel {
+    flex: 1 1 auto;
+    margin-left: 0;
+    justify-content: flex-end;
+    @include desktop {
+      background-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 2px 2px 40px 10px rgba(0, 0, 0, 0.05);
+      font-size: 15px;
+    }
+  }
+
+  .header-buttons:not(:empty) {
+    margin: 0;
+    margin-left: 6px;
+    justify-content: flex-end;
+
+    .btn-primary {
+      @include desktop {
+        background: none;
+        color: $header-primary;
+        font-size: 15px;
+        padding: 6px;
+        // margin: 0;
+        > span {
+          font-size: inherit;
+        }
+        > svg {
+          color: inherit;
+        }
+      }
+    }
+  }
+
+  .header-buttons {
+    button.sign-up-button,
+    button.login-button {
+      display: block;
+      span {
+        font-size: 0.6rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.d-header-icons .d-icon {
+  color: $header-primary;
+  font-size: 12px;
+  @include desktop {
+    font-size: 16px;
+  }
+}
+
+.d-header-icons {
+  @include desktop {
+    margin: 0;
+  }
+  flex: 0 0 auto;
+  .icon {
+    width: 34px;
+    box-sizing: border-box;
+    padding: 0;
+    height: 42px;
+    @include desktop {
+      width: 40px;
+      height: 35px;
+    }
+    img.avatar {
+      height: $mobile-avatar-image-size;
+      width: $mobile-avatar-image-size;
+      @include desktop {
+        height: $desktop-avatar-image-size;
+        width: $desktop-avatar-image-size;
+      }
+    }
+  }
+}
+
+@include desktop {
+  .d-header {
+    .wrap {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      border: none;
+    }
+    > .wrap {
+      max-width: 1125px;
+    }
+  }
+  .category-member-portal {
+    .d-header > .wrap {
+      max-width: 1202px;
+    }
+  }
+}
+
+// Updates to Member-portal due to footer nav
+
+.member-portal-homepage {
+  margin-bottom: calc(4em + 40px);
+  @include large {
+    margin-bottom: calc(8em + 40px);
+  }
+  @include desktop {
+    margin-bottom: 8em;
+  }
+}
+
+.category-member-portal footer {
+  margin-bottom: 40px;
+  @include desktop {
+    margin-bottom: 0;
+  }
+}
+
+@include desktop {
+  .alert.alert-info {
+    margin-top: 0px;
+  }
+  .list-controls,
+  .user-main .about.collapsed-info .controls {
+    margin-right: 136px;
+  }
+
+  .category-header .list-controls {
+    margin-right: 0px;
+  }
+
+  .user-main .about.collapsed-info .controls {
+    margin-top: 0px;
+  }
+  .user-main .about .controls {
+    margin-top: 35px;
+  }
+}

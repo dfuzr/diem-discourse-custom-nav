@@ -1,134 +1,470 @@
 <script type="text/discourse-plugin" version="0.8.20">
-  const { iconNode } = require("discourse-common/lib/icon-library");
+  const { h } = require('virtual-dom');
+  const { iconNode } = require('discourse-common/lib/icon-library');
 
-  const customHeaderLinks = settings.Custom_header_links;
-  const user = api.getCurrentUser() || {};
-  const groups = user.groups || [];
-  var isMember = false;
-  
-  // Use Discourse.SiteSettings instead of hard coded group name "members"
-  const groupsWithAccessToMemberDirectory = [
-    Discourse.SiteSettings.libra_discourse_member_directory_group_name,
-    ...(Discourse.SiteSettings.libra_discourse_member_directory_groups_with_member_directory_access || '').split('|')
-  ].filter(function(groupName) { return groupName.length > 0; });
-  if (groups.filter(function(g) { return groupsWithAccessToMemberDirectory.includes(g.name); }).length > 0) {
-    isMember = true;
+  function isCurrentUserMember() {
+    const user = api.getCurrentUser() || {};
+    const groups = user.groups || [];
+    // Use Discourse.SiteSettings instead of hard coded group name "members"
+    const groupsWithAccessToMemberDirectory = [
+      Discourse.SiteSettings.libra_discourse_member_directory_group_name,
+      ...(
+        Discourse.SiteSettings.libra_discourse_member_directory_groups_with_member_directory_access ||
+        ''
+      ).split('|'),
+    ].filter(function(groupName) {
+      return groupName.length > 0;
+    });
+    return (
+      groups.filter(function(group) {
+        return groupsWithAccessToMemberDirectory.includes(group.name);
+      }).length > 0
+    );
   }
 
-  if (!customHeaderLinks.length) return;
-
-  const h = require("virtual-dom").h;
-  const memberLinks = [];
-  const publicLinks = [];
-
-  customHeaderLinks.split("|").map(i => {
-    const [linkText, linkTitle, linkHref, cls, _linkTarget, keepOnScroll] = $.map(i.split(","), $.trim);
-    const userClass = `.${cls}`;
-    const linkTarget = _linkTarget === "self" ? "" : "_blank";
-    const keepOnScrollClass = keepOnScroll === "keep" ? ".keep" : "";
-    const linkClass = `.${linkText.trim().toLowerCase().replace(/\s/gi, '-')}-nav-item`;
-    
-    if (userClass === '.members' || userClass === '.both') {
-        memberLinks.push(
-            h(
-              `li${userClass}${keepOnScrollClass}${linkClass}`,
-              h(
-                "a.nav-link",
-                {
-                  title: linkTitle,
-                  href: linkHref,
-                  target: linkTarget
-                },
-                linkText
-              )
-            )
-        );
-    }
-    
-    if (userClass === '.public' || userClass === '.both') {
-        publicLinks.push(
-            h(
-              `li${userClass}${keepOnScrollClass}${linkClass}`,
-              h(
-                "a.nav-link",
-                {
-                  title: linkTitle,
-                  href: linkHref,
-                  target: linkTarget
-                },
-                linkText
-              )
-            )
-        );
-    }
-  });
-
-  api.decorateWidget("header-buttons:before", helper => {
-      if (isMember) {
-       return helper.h(
-          'ul.nav-link-container', [
-              helper.h('li.nav-link-title.members', [
-                helper.h('a.nav-link', {
-                    href:'/c/member-portal', 
-                    text:'Member Portal'
-                }) 
-              ]),
-              memberLinks,
-              helper.h('li.more', [
-                helper.h('a.nav-link', {
-                    text:'More',
-                }, iconNode('angle-down')),
-                helper.h('ul'),
-              ]),
-          ]
-        );   
-      } 
-      else {
-        return helper.h(
-          'ul.nav-link-container', [
-              helper.h('li.nav-link-title.public', [
-                helper.h('a.nav-link', {
-                    href:'https://developers.libra.org/', 
-                    text:'Developers',
-                    target:'_self'
-                }) 
-              ]),
-              publicLinks,
-              helper.h('li.more', [
-                helper.h('a.nav-link', {
-                    text:'More',
-                }, iconNode('angle-down')),
-                helper.h('ul'),
-              ]),
-          ]
-        ); 
-      }
-  });
-
-  api.decorateWidget("home-logo:after", helper => {
-    let titleVisible = helper.attrs.minimized;
-    if (titleVisible) {
-      $(".d-header").addClass("hide-menus");
-    } else {
-      $(".d-header").removeClass("hide-menus");
-      if ($(window).width() > 600) {
-        var calcTimeout = setTimeout(calcWidth, 50);
+  function getAssetUrls() {
+    if (
+      window.getComputedStyle &&
+      window.getComputedStyle(document.body, '::before') &&
+      window.getComputedStyle(document.body, '::before').content
+    ) {
+      try {
+        return JSON.parse(JSON.parse(window.getComputedStyle(document.body, '::before').content));
+      } catch (error) {
+        console.error(error);
       }
     }
+    return {};
+  }
+
+  function getAsset(name) {
+    return getAssetUrls()[name];
+  }
+
+  function imageAsset(name, _this) {
+    return _this.attach('image', { src: getAsset(name), alt: name });
+  }
+
+  api.createWidget('image', {
+    tagName: 'span.fill',
+    html({ src, alt, noImage = null }) {
+      if (src) {
+        return h('img', {
+          attributes: {
+            src,
+            alt,
+          },
+        });
+      }
+      return noImage;
+    },
   });
 
-  api.decorateWidget("home-logo:before", helper => {
-    return helper.h('span.nav-link-trigger', [
-        iconNode('ellipsis-v'),
-        iconNode('times')
-    ]);
+  api.createWidget('custom-link', {
+    tagName: 'a',
+    buildClasses({ classNames = [] }) {
+      return ['custom-link'].concat(classNames);
+    },
+    buildAttributes(attrs) {
+      const { external, href, title } = attrs;
+      const ret = {
+        href,
+        title,
+      };
+      if (external) {
+        ret.target = '_blank';
+      }
+      return ret;
+    },
+    html(attrs) {
+      const { contents = () => [] } = attrs;
+      return contents();
+    },
   });
-  
-  api.onPageChange(() => {  
-    setActiveNav();
+
+  /*
+    --------------------------------------
+          Mobile Discourse Footer Nav
+    --------------------------------------
+  */
+  api.decorateWidget('home-logo:before', function(helper) {
+    const contents = () => {
+      const src =
+        (settings.theme_uploads && settings.theme_uploads['back-to-top']) || getAsset('arrow-up');
+      return [helper.attach('image', { src })].filter((item) => item);
+    };
+    return helper.h('span#back-to-top', ['Back to Top', helper.h('span.arrow-up-icon', contents())]);
+  });
+  /* -------------------------------------- */
+
+  api.createWidget('top-right-mobile-link', {
+    tagName: 'div.mobile.link-image',
+    buildKey: () => 'top-right-mobile-link',
+    html(link) {
+      const { mobileImg = {}, title } = link;
+      const contents = () => {
+        const { src, alt } = mobileImg;
+        return [this.attach('image', { src, alt, noImage: title })];
+      };
+      return [this.attach('custom-link', Object.assign({}, link, { contents }))];
+    },
   });
 
-  api.changeWidgetSetting('home-logo', 'href', 'https://developers.libra.org/')
+  api.createWidget('top-right-mobile-links', {
+    tagName: 'div.top-right-mobile-links.mobile',
+    html() {
+      const links = getMainNavLinks().filter(({ mobileTopRight }) => mobileTopRight);
+      return links.map((link) => this.attach('top-right-mobile-link', link));
+    },
+  });
 
+  api.createWidget('main-nav-trigger', {
+    tagName: 'div.mobile.main-nav-trigger.pointer',
+    buildKey: ({ classNames }) => `main-nav-trigger.${classNames.join('.')}`,
+    html(attrs) {
+      this.updateTagName(attrs);
+      const { src, alt } = attrs;
+      return [this.attach('image', { noImage: attrs.altIcon, src, alt })];
+    },
+    updateTagName(attrs) {
+      this.tagName +=
+        attrs.classNames && attrs.classNames.length > 0 ? `.${attrs.classNames.join('.')}` : '';
+    },
+  });
 
+  api.createWidget('sub-nav-trigger', {
+    tagName: 'div.mobile.sub-nav-trigger.pointer',
+    buildKey: ({ classNames }) => `sub-nav-trigger.${classNames.join('.')}`,
+    html(attrs) {
+      this.updateTagName(attrs);
+      const { src, alt } = attrs;
+      return [this.attach('image', { noImage: attrs.altIcon, src, alt })];
+    },
+    updateTagName(attrs) {
+      this.tagName +=
+        attrs.classNames && attrs.classNames.length > 0 ? `.${attrs.classNames.join('.')}` : '';
+    },
+  });
+
+  api.createWidget('main-nav-toggles', {
+    tagName: 'div.mobile',
+    buildKey: () => 'main-nav-toggles',
+    html() {
+      const openSrc = settings.theme_uploads && settings.theme_uploads['open-main-nav-icon'];
+      const closeSrc = settings.theme_uploads && settings.theme_uploads['close-main-nav-icon'];
+      return [
+        this.attach('main-nav-trigger', {
+          classNames: ['trigger-open'],
+          img: { src: openSrc, alt: 'Open' },
+          altIcon: imageAsset('ellipse-v', this),
+        }),
+        this.attach('main-nav-trigger', {
+          classNames: ['trigger-closed', 'mobile-hidden'],
+          img: { src: closeSrc, alt: 'Close' },
+          altIcon: imageAsset('close', this),
+        }),
+      ];
+    },
+  });
+
+  api.createWidget('logo-container', {
+    tagName: 'div.logo-container',
+    buildKey: () => 'logo-container',
+    html() {
+      return [
+        this.attach('main-nav-toggles'),
+        this.attach('home-logo'),
+        this.attach('top-right-mobile-links'),
+      ];
+    },
+  });
+
+  api.createWidget('main-nav-links', {
+    tagName: 'div.navigationWrapper.navigationSlider.mobile-hidden',
+    buildKey: () => 'main-nav-links',
+    html() {
+      const links = getMainNavLinks().map((link) => {
+        const classNames = [];
+        const contents = () => link.title;
+        if (link.highlight) {
+          classNames.push('highlight');
+        }
+        if (link.mobileTopRight) {
+          classNames.push('mobile-hidden');
+        }
+        if (link.selected) {
+          classNames.push('selected');
+        }
+        return Object.assign({}, link, { classNames, contents });
+      });
+      return h('nav.slidingNav', [
+        h(
+          'ul.nav-site.nav-site-internal',
+          links.map((link) => h('li', this.attach('custom-link', link))),
+        ),
+      ]);
+    },
+  });
+
+  api.createWidget('main-nav', {
+    tagName: 'div.main-nav',
+    buildKey: () => 'main-nav',
+    html() {
+      return h('div.wrapper.wrap', [
+        h('div.main-nav-container', [this.attach('logo-container'), this.attach('main-nav-links')]),
+      ]);
+    },
+  });
+
+  api.createWidget('breadcrumbItem', {
+    tagName: 'div.breadcrumb-item',
+    html({ link }) {
+      return [h('span.mobile-hidden', ['/']), h('span', [link.title])];
+    },
+  });
+
+  api.createWidget('breadcrumb', {
+    tagName: 'div.breadcrumb',
+    html() {
+      const breadcrumb = getBreadCrumb();
+      return [
+        h('h2', ['Developers']),
+        h(
+          'div.breadcrumb-items',
+          breadcrumb.map((link) => this.attach('breadcrumbItem', { link })),
+        ),
+      ];
+    },
+  });
+
+  api.decorateWidget('breadcrumb:after', (helper) => {
+    helper.widget.appEvents.on('page:changed', () => {
+      helper.widget.scheduleRerender();
+    });
+  });
+
+  api.createWidget('sub-nav-links-list', {
+    tagName: 'ul.nav-site.nav-site-internal',
+    html(attrs) {
+      const { links } = attrs;
+      const processedLinks = links.map((link) => {
+        const classNames = [];
+        const contents = () => link.title;
+        if (linkCanBeActive(link, links) && isLinkActive(link)) {
+          classNames.push('siteNavItemActive');
+        }
+        return Object.assign({}, link, { classNames, contents });
+      });
+      return processedLinks.map((link) => {
+        if (link.subLinks && Array.isArray(link.subLinks)) {
+          const contents = link.contents;
+          link.contents = () => [
+            contents(),
+            h('span.desktop-sub-nav-toggle.trigger-open.mobile-hidden', [iconNode('chevron-down')]),
+            h('span.desktop-sub-nav-toggle.trigger-closed.mobile.mobile-hidden', [
+              iconNode('chevron-up'),
+            ]),
+          ];
+          link.classNames.push('desktop-sub-nav-toggle-container');
+        }
+        const linkContent = [this.attach('custom-link', link)];
+        if (link.subLinks && Array.isArray(link.subLinks)) {
+          linkContent.push(
+            h('div.sub-sub-nav-links.mobile', [
+              h('div.nav-triangle.mobile-hidden'),
+              this.attach('sub-nav-links-list', { links: link.subLinks }),
+            ]),
+          );
+        }
+        return h('li', linkContent);
+      });
+    },
+  });
+
+  api.createWidget('sub-nav-links', {
+    tagName: 'div.mobile-hidden.navigationWrapper.navigationSlider',
+    html() {
+      const subNavLinks = getSubNavLinks();
+      return h('nav.slidingNav', [this.attach('sub-nav-links-list', { links: subNavLinks })]);
+    },
+  });
+
+  api.decorateWidget('sub-nav-links:after', (helper) => {
+    helper.widget.appEvents.on('page:changed', () => {
+      helper.widget.scheduleRerender();
+    });
+  });
+
+  api.createWidget('sub-nav-toggles', {
+    tagName: 'div.mobile',
+    buildKey: () => 'sub-nav-toggles',
+    html() {
+      const openSrc = settings.theme_uploads && settings.theme_uploads['open-sub-nav-icon'];
+      const closeSrc = settings.theme_uploads && settings.theme_uploads['close-sub-nav-icon'];
+      return [
+        this.attach('sub-nav-trigger', {
+          classNames: ['trigger-open'],
+          img: { src: openSrc, alt: 'Open' },
+          altIcon: imageAsset('chevron-down', this),
+        }),
+        this.attach('sub-nav-trigger', {
+          classNames: ['trigger-closed', 'mobile-hidden'],
+          img: { src: closeSrc, alt: 'Close' },
+          altIcon: imageAsset('chevron-pressed', this),
+        }),
+      ];
+    },
+  });
+
+  api.createWidget('sub-nav', {
+    tagName: 'div#SubNav',
+    buildKey: () => 'sub-nav',
+    html(attr, state) {
+      return h('div.wrapper.wrap', [
+        h('div.sub-header', [
+          this.attach('breadcrumb'),
+          this.attach('sub-nav-links'),
+          this.attach('sub-nav-toggles'),
+        ]),
+      ]);
+    },
+  });
+
+  api.createWidget('unified-nav', {
+    tagName: 'div#unified-nav',
+    buildKey: () => 'unified-nav',
+    html(attrs, state) {
+      return h('header', [this.attach('main-nav'), this.attach('sub-nav')]);
+    },
+  });
+
+  api.decorateWidget('unified-nav:after', (helper) => {
+    helper.widget.appEvents.on('page:changed', () => {
+      helper.widget.scheduleRerender();
+    });
+  });
+
+  api.createWidget('nav-pusher', {
+    tagName: 'div.navPusher',
+    html() {
+      return [];
+    },
+  });
+
+  api.createWidget('libra-discourse-custom-nav', {
+    tagName: 'div.libra-discourse-custom-nav',
+    html() {
+      return [this.attach('unified-nav'), this.attach('nav-pusher')];
+    },
+  });
+
+  function getMainNavLinks() {
+    return convertAndErrorCheckSettingsLinks(settings.main_nav_links);
+  }
+
+  function getSubNavLinks() {
+    return convertAndErrorCheckSettingsLinks(settings.sub_nav_links).filter((link) =>
+      !isCurrentUserMember() ? link.visibility === 'public' || link.visibility === 'both' : true,
+    );
+  }
+
+  function convertAndErrorCheckSettingsLinks(links) {
+    return links
+      .split('|')
+      .map((link) => {
+        try {
+          return JSON.parse(link);
+        } catch (error) {
+          console.error(error);
+        }
+      })
+      .filter((item) => item);
+  }
+
+  function shouldIncludeInBreadcrumbOnPaths(link) {
+    if (
+      link.shouldIncludeInBreadcrumbOnPaths &&
+      Array.isArray(link.shouldIncludeInBreadcrumbOnPaths)
+    ) {
+      return (
+        link.shouldIncludeInBreadcrumbOnPaths.filter((path) =>
+          new RegExp(path).test(window.location.pathname),
+        ).length > 0
+      );
+    }
+    return false;
+  }
+
+  function linkCanBeActive(link, links = []) {
+    if (!link.activeScopes || !Array.isArray(link.activeScopes)) {
+      return true;
+    }
+    return (
+      link.activeScopes.filter(({ id, isInactive, isActive }) => {
+        // returning true keeps item in list.
+        // any item kept in the list are blocking items.
+        const otherLink = links.find((i) => i.id === id);
+        if (!otherLink) {
+          return false;
+        }
+        const isOtherLinkActive = isLinkActive(otherLink);
+        // if otherLink should be inActive but is currently active
+        if (isInactive && isOtherLinkActive) {
+          return true;
+        }
+        // if otherLink should be active but is currently inActive
+        if (isActive && !isOtherLinkActive) {
+          return true;
+        }
+        return false;
+      }).length === 0
+    );
+  }
+
+  function isLinkCurrentPage(link) {
+    return new RegExp(link.href).test(window.location.href);
+  }
+
+  function isChildLinkCurrentPage(link) {
+    return (
+      link.subLinks && Array.isArray(link.subLinks) && link.subLinks.filter(isLinkCurrentPage).length
+    );
+  }
+
+  function flattenLinks(links) {
+    if (links.length === 0) {
+      return links;
+    }
+    const [firstLink, ...rest] = links;
+    const flattenedRest = flattenLinks(rest);
+    const flattenedFirst =
+      firstLink.subLinks && Array.isArray(firstLink.subLinks)
+        ? [firstLink].concat(flattenLinks(firstLink.subLinks))
+        : [firstLink];
+    return flattenedFirst.concat(flattenedRest);
+  }
+
+  function isLinkActive(link) {
+    return (
+      shouldIncludeInBreadcrumbOnPaths(link) ||
+      isLinkCurrentPage(link) ||
+      isChildLinkCurrentPage(link)
+    );
+  }
+
+  function getBreadCrumb() {
+    const links = flattenLinks(getSubNavLinks());
+    return links.filter((link) => {
+      return !link.doNotIncludeInBreadcrumb && linkCanBeActive(link, links) && isLinkActive(link);
+    });
+  }
+
+  api.changeWidgetSetting('home-logo', 'href', 'https://libra.org/');
+</script>
+
+<script
+  type="text/x-handlebars"
+  data-template-name="/connectors/above-site-header/libra-discourse-custom-nav"
+>
+  {{mount-widget widget="libra-discourse-custom-nav"}}
 </script>
