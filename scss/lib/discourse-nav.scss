@@ -249,6 +249,8 @@ $desktop-avatar-image-size: 2.1em;
   }
 }
 
+// Adjusting other parts of the page that need to be moved because they interfere with the floating
+// discourse nav on desktop
 @include desktop {
   .alert.alert-info {
     margin-top: 0px;
@@ -267,5 +269,14 @@ $desktop-avatar-image-size: 2.1em;
   }
   .user-main .about .controls {
     margin-top: 35px;
+  }
+
+  .group-details-button {
+    top: unset;
+    bottom: 20px;
+  }
+  .groups-header,
+  .users-page .directory .filter-name {
+    margin-right: 130px;
   }
 }
