@@ -1,61 +1,76 @@
 <script>
-  const interceptClick = require('discourse/lib/intercept-click').default;
-  const { withPluginApi } = require('discourse/lib/plugin-api');
+  const interceptClick = require("discourse/lib/intercept-click").default;
+  const { withPluginApi } = require("discourse/lib/plugin-api");
 
-  withPluginApi('0.8.37', function(api) {
+  withPluginApi("0.10.2", function (api) {
     api.onPageChange(() => {
       positionDiscourseNavDesktop();
     });
   });
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     addBackToTopClickFunctionality();
     positionDiscourseNavDesktop();
   });
 
   function addBackToTopClickFunctionality() {
-    const backToTop = $('.d-header #back-to-top');
-    backToTop.on('click', function(event) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    const backToTop = $(".d-header #back-to-top");
+    backToTop.on("click", function (event) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
 
   function positionDiscourseNavDesktop() {
-    const $staffBanner = $('.user-main .staff-counters');
-    const $alertBanner = $('.alert.alert-info');
+    const $staffBanner = $(".user-main .staff-counters");
+    const $alertBanner = $(".alert.alert-info");
     if ($alertBanner.length) {
-      $('.d-header .contents').addClass('with-banner');
-      $alertBanner.on('click', 'button.close', function(event) {
-        $('.d-header .contents').removeClass('with-banner');
+      $(".d-header .contents").addClass("with-banner");
+      $alertBanner.on("click", "button.close", function (event) {
+        $(".d-header .contents").removeClass("with-banner");
       });
     }
     if ($staffBanner.length) {
-      $('.d-header .contents').addClass('with-staff-banner');
+      $(".d-header .contents").addClass("with-staff-banner");
     } else {
-      $('.d-header .contents').removeClass('with-staff-banner');
+      $(".d-header .contents").removeClass("with-staff-banner");
     }
   }
 
-  (function() {
+  (function () {
     let isMainNavClick = false;
     let isSubNavClick = false;
     let isDesktopSubNavClick = false;
 
-    $(document).ready(function() {
+    $(document).ready(function () {
       // Mobile Nav
-      const mainNavToggles = document.querySelectorAll('.main-nav .mobile.main-nav-trigger');
-      const mainNav = document.querySelector('.main-nav .navigationWrapper.navigationSlider');
-      const subNavToggles = document.querySelectorAll('#SubNav .mobile.sub-nav-trigger');
-      const subNav = document.querySelector('#SubNav .navigationWrapper.navigationSlider');
+      const mainNavToggles = document.querySelectorAll(
+        ".main-nav .mobile.main-nav-trigger"
+      );
+      const mainNav = document.querySelector(
+        ".main-nav .navigationWrapper.navigationSlider"
+      );
+      const subNavToggles = document.querySelectorAll(
+        "#SubNav .mobile.sub-nav-trigger"
+      );
+      const subNav = document.querySelector(
+        "#SubNav .navigationWrapper.navigationSlider"
+      );
       // Desktop Nav
       const desktopSubNavToggle = document.querySelector(
-        '#SubNav .desktop-sub-nav-toggle-container',
+        "#SubNav .desktop-sub-nav-toggle-container"
       );
-      const desktopSubNav = document.querySelector('#SubNav .sub-sub-nav-links');
+      const desktopSubNav = document.querySelector(
+        "#SubNav .sub-sub-nav-links"
+      );
 
       function addClickHandlersToMainNavTriggers() {
         stopPropagation(mainNav);
-        addClickHandlersToMobileNavToggles(mainNavToggles, mainNav, true, false);
+        addClickHandlersToMobileNavToggles(
+          mainNavToggles,
+          mainNav,
+          true,
+          false
+        );
       }
 
       function addClickHandlersToSubNavTriggers() {
@@ -69,7 +84,7 @@
       }
 
       function addNavLinkClickIntercept() {
-        $('#unified-nav a').on('click', function(e) {
+        $("#unified-nav a").on("click", function (e) {
           // Uses Discourse to navigate on internal links,
           // not full page loads
           if (isMobile() || didNotJustClickDesktopSubNavToggle(e)) {
@@ -77,28 +92,28 @@
             closeSingleToggleNav(
               desktopSubNav,
               desktopSubNavToggle,
-              'mobile',
-              '.desktop-sub-nav-toggle',
+              "mobile",
+              ".desktop-sub-nav-toggle"
             );
           }
-          closeNav(mainNav, mainNavToggles, 'mobile-hidden');
-          closeNav(subNav, subNavToggles, 'mobile-hidden');
+          closeNav(mainNav, mainNavToggles, "mobile-hidden");
+          closeNav(subNav, subNavToggles, "mobile-hidden");
         });
       }
 
       function addCloseMenuClickHandlers() {
-        window.addEventListener('click', function() {
+        window.addEventListener("click", function () {
           if (!isMainNavClick && !isSubNavClick && !isDesktopSubNavClick) {
-            $('body').removeClass('menu-open');
+            $("body").removeClass("menu-open");
           }
 
           if (!isMainNavClick) {
-            closeNav(mainNav, mainNavToggles, 'mobile-hidden');
+            closeNav(mainNav, mainNavToggles, "mobile-hidden");
           }
           isMainNavClick = false;
 
           if (!isSubNavClick) {
-            closeNav(subNav, subNavToggles, 'mobile-hidden');
+            closeNav(subNav, subNavToggles, "mobile-hidden");
           }
           isSubNavClick = false;
 
@@ -106,8 +121,8 @@
             closeSingleToggleNav(
               desktopSubNav,
               desktopSubNavToggle,
-              'mobile',
-              '.desktop-sub-nav-toggle',
+              "mobile",
+              ".desktop-sub-nav-toggle"
             );
           }
           isDesktopSubNavClick = false;
@@ -122,41 +137,48 @@
     });
 
     function didNotJustClickDesktopSubNavToggle(e) {
-      return $(e.target).closest('.desktop-sub-nav-toggle-container').length === 0;
+      return (
+        $(e.target).closest(".desktop-sub-nav-toggle-container").length === 0
+      );
     }
 
-    function addClickHandlersToMobileNavToggles(navToggles, nav, _isMainNavClick, _isSubNavClick) {
-      navToggles.forEach(function(node) {
-        $(node).on('click', function() {
-          $('body').addClass('menu-open');
+    function addClickHandlersToMobileNavToggles(
+      navToggles,
+      nav,
+      _isMainNavClick,
+      _isSubNavClick
+    ) {
+      navToggles.forEach(function (node) {
+        $(node).on("click", function () {
+          $("body").addClass("menu-open");
           isMainNavClick = _isMainNavClick;
           isSubNavClick = _isSubNavClick;
-          navToggles.forEach(function(toggle) {
-            toggleVisibility(toggle, 'mobile-hidden');
+          navToggles.forEach(function (toggle) {
+            toggleVisibility(toggle, "mobile-hidden");
           });
-          toggleVisibility(nav, 'mobile-hidden');
+          toggleVisibility(nav, "mobile-hidden");
         });
       });
     }
 
     function addClickHandlersToDesktopNavToggle(navToggle, nav) {
-      $(navToggle).on('click', function(event) {
-        $('body').addClass('menu-open');
+      $(navToggle).on("click", function (event) {
+        $("body").addClass("menu-open");
         if (!isMobile()) {
           event.preventDefault();
         }
         event.stopPropagation();
-        const icons = navToggle.querySelectorAll('.desktop-sub-nav-toggle');
-        icons.forEach(function(toggle) {
-          toggleVisibility(toggle, 'mobile');
+        const icons = navToggle.querySelectorAll(".desktop-sub-nav-toggle");
+        icons.forEach(function (toggle) {
+          toggleVisibility(toggle, "mobile");
         });
-        toggleVisibility(nav, 'mobile');
+        toggleVisibility(nav, "mobile");
       });
     }
 
     function closeNav(nav, navToggles, className) {
-      navToggles.forEach(function(toggle) {
-        if (toggle.classList.contains('trigger-open')) {
+      navToggles.forEach(function (toggle) {
+        if (toggle.classList.contains("trigger-open")) {
           toggle.classList.remove(className);
         } else {
           toggle.classList.add(className);
@@ -167,20 +189,20 @@
       }
     }
 
-    function closeSingleToggleNav(nav, navToggle, className, childClass = '') {
+    function closeSingleToggleNav(nav, navToggle, className, childClass = "") {
       const icons = navToggle.querySelectorAll(childClass);
       closeNav(nav, icons, className);
     }
 
     function stopPropagation(nav) {
-      $(nav).on('click', function(event) {
+      $(nav).on("click", function (event) {
         event.stopPropagation();
       });
     }
 
     function toggleVisibility(node, className) {
-      if ($(node).hasClass('trigger-open') && $(node).hasClass(className)) {
-        $('body').removeClass('menu-open');
+      if ($(node).hasClass("trigger-open") && $(node).hasClass(className)) {
+        $("body").removeClass("menu-open");
       }
       if (node) {
         node.classList.toggle(className);
