@@ -1,6 +1,6 @@
-<script type="text/discourse-plugin" version="0.10.2">
-  const { h } = require('virtual-dom');
-  const { iconNode } = require('discourse-common/lib/icon-library');
+<script type="text/discourse-plugin" version="0.10">
+  const { h } = require("virtual-dom");
+  const { iconNode } = require("discourse-common/lib/icon-library");
 
   function isCurrentUserMember() {
     const user = api.getCurrentUser() || {};
@@ -9,14 +9,15 @@
     const groupsWithAccessToMemberDirectory = [
       Discourse.SiteSettings.libra_discourse_member_directory_group_name,
       ...(
-        Discourse.SiteSettings.libra_discourse_member_directory_groups_with_member_directory_access ||
-        ''
-      ).split('|'),
-    ].filter(function(groupName) {
+        Discourse.SiteSettings
+          .libra_discourse_member_directory_groups_with_member_directory_access ||
+        ""
+      ).split("|"),
+    ].filter(function (groupName) {
       return groupName.length > 0;
     });
     return (
-      groups.filter(function(group) {
+      groups.filter(function (group) {
         return groupsWithAccessToMemberDirectory.includes(group.name);
       }).length > 0
     );
@@ -25,11 +26,13 @@
   function getAssetUrls() {
     if (
       window.getComputedStyle &&
-      window.getComputedStyle(document.body, '::before') &&
-      window.getComputedStyle(document.body, '::before').content
+      window.getComputedStyle(document.body, "::before") &&
+      window.getComputedStyle(document.body, "::before").content
     ) {
       try {
-        return JSON.parse(JSON.parse(window.getComputedStyle(document.body, '::before').content));
+        return JSON.parse(
+          JSON.parse(window.getComputedStyle(document.body, "::before").content)
+        );
       } catch (error) {
         console.error(error);
       }
@@ -42,14 +45,14 @@
   }
 
   function imageAsset(name, _this) {
-    return _this.attach('image', { src: getAsset(name), alt: name });
+    return _this.attach("image", { src: getAsset(name), alt: name });
   }
 
-  api.createWidget('image', {
-    tagName: 'span.fill',
+  api.createWidget("image", {
+    tagName: "span.fill",
     html({ src, alt, noImage = null }) {
       if (src) {
-        return h('img', {
+        return h("img", {
           attributes: {
             src,
             alt,
@@ -60,10 +63,10 @@
     },
   });
 
-  api.createWidget('custom-link', {
-    tagName: 'a',
+  api.createWidget("custom-link", {
+    tagName: "a",
     buildClasses({ classNames = [] }) {
-      return ['custom-link'].concat(classNames);
+      return ["custom-link"].concat(classNames);
     },
     buildAttributes(attrs) {
       const { external, href, title } = attrs;
@@ -72,7 +75,7 @@
         title,
       };
       if (external) {
-        ret.target = '_blank';
+        ret.target = "_blank";
       }
       return ret;
     },
@@ -87,171 +90,188 @@
           Mobile Discourse Footer Nav
     --------------------------------------
   */
-  api.decorateWidget('home-logo:before', function(helper) {
+  api.decorateWidget("home-logo:before", function (helper) {
     const contents = () => {
       const src =
-        (settings.theme_uploads && settings.theme_uploads['back-to-top']) || getAsset('arrow-up');
-      return [helper.attach('image', { src })].filter((item) => item);
+        (settings.theme_uploads && settings.theme_uploads["back-to-top"]) ||
+        getAsset("arrow-up");
+      return [helper.attach("image", { src })].filter((item) => item);
     };
-    return helper.h('span#back-to-top', ['Back to Top', helper.h('span.arrow-up-icon', contents())]);
+    return helper.h("span#back-to-top", [
+      "Back to Top",
+      helper.h("span.arrow-up-icon", contents()),
+    ]);
   });
   /* -------------------------------------- */
 
-  api.createWidget('top-right-mobile-link', {
-    tagName: 'div.mobile.link-image',
-    buildKey: () => 'top-right-mobile-link',
+  api.createWidget("top-right-mobile-link", {
+    tagName: "div.mobile.link-image",
+    buildKey: () => "top-right-mobile-link",
     html(link) {
       const { mobileImg = {}, title } = link;
       const contents = () => {
         const { src, alt } = mobileImg;
-        return [this.attach('image', { src, alt, noImage: title })];
+        return [this.attach("image", { src, alt, noImage: title })];
       };
-      return [this.attach('custom-link', Object.assign({}, link, { contents }))];
-    },
-  });
-
-  api.createWidget('top-right-mobile-links', {
-    tagName: 'div.top-right-mobile-links.mobile',
-    html() {
-      const links = getMainNavLinks().filter(({ mobileTopRight }) => mobileTopRight);
-      return links.map((link) => this.attach('top-right-mobile-link', link));
-    },
-  });
-
-  api.createWidget('main-nav-trigger', {
-    tagName: 'div.mobile.main-nav-trigger.pointer',
-    buildKey: ({ classNames }) => `main-nav-trigger.${classNames.join('.')}`,
-    html(attrs) {
-      this.updateTagName(attrs);
-      const { src, alt } = attrs;
-      return [this.attach('image', { noImage: attrs.altIcon, src, alt })];
-    },
-    updateTagName(attrs) {
-      this.tagName +=
-        attrs.classNames && attrs.classNames.length > 0 ? `.${attrs.classNames.join('.')}` : '';
-    },
-  });
-
-  api.createWidget('sub-nav-trigger', {
-    tagName: 'div.mobile.sub-nav-trigger.pointer',
-    buildKey: ({ classNames }) => `sub-nav-trigger.${classNames.join('.')}`,
-    html(attrs) {
-      this.updateTagName(attrs);
-      const { src, alt } = attrs;
-      return [this.attach('image', { noImage: attrs.altIcon, src, alt })];
-    },
-    updateTagName(attrs) {
-      this.tagName +=
-        attrs.classNames && attrs.classNames.length > 0 ? `.${attrs.classNames.join('.')}` : '';
-    },
-  });
-
-  api.createWidget('main-nav-toggles', {
-    tagName: 'div.mobile',
-    buildKey: () => 'main-nav-toggles',
-    html() {
-      const openSrc = settings.theme_uploads && settings.theme_uploads['open-main-nav-icon'];
-      const closeSrc = settings.theme_uploads && settings.theme_uploads['close-main-nav-icon'];
       return [
-        this.attach('main-nav-trigger', {
-          classNames: ['trigger-open'],
-          img: { src: openSrc, alt: 'Open' },
-          altIcon: imageAsset('ellipse-v', this),
+        this.attach("custom-link", Object.assign({}, link, { contents })),
+      ];
+    },
+  });
+
+  api.createWidget("top-right-mobile-links", {
+    tagName: "div.top-right-mobile-links.mobile",
+    html() {
+      const links = getMainNavLinks().filter(
+        ({ mobileTopRight }) => mobileTopRight
+      );
+      return links.map((link) => this.attach("top-right-mobile-link", link));
+    },
+  });
+
+  api.createWidget("main-nav-trigger", {
+    tagName: "div.mobile.main-nav-trigger.pointer",
+    buildKey: ({ classNames }) => `main-nav-trigger.${classNames.join(".")}`,
+    html(attrs) {
+      this.updateTagName(attrs);
+      const { src, alt } = attrs;
+      return [this.attach("image", { noImage: attrs.altIcon, src, alt })];
+    },
+    updateTagName(attrs) {
+      this.tagName +=
+        attrs.classNames && attrs.classNames.length > 0
+          ? `.${attrs.classNames.join(".")}`
+          : "";
+    },
+  });
+
+  api.createWidget("sub-nav-trigger", {
+    tagName: "div.mobile.sub-nav-trigger.pointer",
+    buildKey: ({ classNames }) => `sub-nav-trigger.${classNames.join(".")}`,
+    html(attrs) {
+      this.updateTagName(attrs);
+      const { src, alt } = attrs;
+      return [this.attach("image", { noImage: attrs.altIcon, src, alt })];
+    },
+    updateTagName(attrs) {
+      this.tagName +=
+        attrs.classNames && attrs.classNames.length > 0
+          ? `.${attrs.classNames.join(".")}`
+          : "";
+    },
+  });
+
+  api.createWidget("main-nav-toggles", {
+    tagName: "div.mobile",
+    buildKey: () => "main-nav-toggles",
+    html() {
+      const openSrc =
+        settings.theme_uploads && settings.theme_uploads["open-main-nav-icon"];
+      const closeSrc =
+        settings.theme_uploads && settings.theme_uploads["close-main-nav-icon"];
+      return [
+        this.attach("main-nav-trigger", {
+          classNames: ["trigger-open"],
+          img: { src: openSrc, alt: "Open" },
+          altIcon: imageAsset("ellipse-v", this),
         }),
-        this.attach('main-nav-trigger', {
-          classNames: ['trigger-closed', 'mobile-hidden'],
-          img: { src: closeSrc, alt: 'Close' },
-          altIcon: imageAsset('close', this),
+        this.attach("main-nav-trigger", {
+          classNames: ["trigger-closed", "mobile-hidden"],
+          img: { src: closeSrc, alt: "Close" },
+          altIcon: imageAsset("close", this),
         }),
       ];
     },
   });
 
-  api.createWidget('logo-container', {
-    tagName: 'div.logo-container',
-    buildKey: () => 'logo-container',
+  api.createWidget("logo-container", {
+    tagName: "div.logo-container",
+    buildKey: () => "logo-container",
     html() {
       return [
-        this.attach('main-nav-toggles'),
-        this.attach('home-logo'),
-        this.attach('top-right-mobile-links'),
+        this.attach("main-nav-toggles"),
+        this.attach("home-logo"),
+        this.attach("top-right-mobile-links"),
       ];
     },
   });
 
-  api.createWidget('main-nav-links', {
-    tagName: 'div.navigationWrapper.navigationSlider.mobile-hidden',
-    buildKey: () => 'main-nav-links',
+  api.createWidget("main-nav-links", {
+    tagName: "div.navigationWrapper.navigationSlider.mobile-hidden",
+    buildKey: () => "main-nav-links",
     html() {
       const links = getMainNavLinks().map((link) => {
         const classNames = [];
         const contents = () => link.title;
         if (link.highlight) {
-          classNames.push('highlight');
+          classNames.push("highlight");
         }
         if (link.mobileTopRight) {
-          classNames.push('mobile-hidden');
+          classNames.push("mobile-hidden");
         }
         if (link.selected) {
-          classNames.push('selected');
+          classNames.push("selected");
         }
         return Object.assign({}, link, { classNames, contents });
       });
-      return h('nav.slidingNav', [
+      return h("nav.slidingNav", [
         h(
-          'ul.nav-site.nav-site-internal',
-          links.map((link) => h('li', this.attach('custom-link', link))),
+          "ul.nav-site.nav-site-internal",
+          links.map((link) => h("li", this.attach("custom-link", link)))
         ),
       ]);
     },
   });
 
-  api.createWidget('main-nav', {
-    tagName: 'div.main-nav',
-    buildKey: () => 'main-nav',
+  api.createWidget("main-nav", {
+    tagName: "div.main-nav",
+    buildKey: () => "main-nav",
     html() {
-      return h('div.wrapper.wrap', [
-        h('div.main-nav-container', [this.attach('logo-container'), this.attach('main-nav-links')]),
+      return h("div.wrapper.wrap", [
+        h("div.main-nav-container", [
+          this.attach("logo-container"),
+          this.attach("main-nav-links"),
+        ]),
       ]);
     },
   });
 
-  api.createWidget('breadcrumbItem', {
-    tagName: 'div.breadcrumb-item',
+  api.createWidget("breadcrumbItem", {
+    tagName: "div.breadcrumb-item",
     html({ link }) {
-      return [h('span.mobile-hidden', ['/']), h('span', [link.title])];
+      return [h("span.mobile-hidden", ["/"]), h("span", [link.title])];
     },
   });
 
-  api.createWidget('breadcrumb', {
-    tagName: 'div.breadcrumb',
+  api.createWidget("breadcrumb", {
+    tagName: "div.breadcrumb",
     html() {
       const breadcrumb = getBreadCrumb();
       return [
-        h('h2', ['Developers']),
+        h("h2", ["Developers"]),
         h(
-          'div.breadcrumb-items',
-          breadcrumb.map((link) => this.attach('breadcrumbItem', { link })),
+          "div.breadcrumb-items",
+          breadcrumb.map((link) => this.attach("breadcrumbItem", { link }))
         ),
       ];
     },
   });
 
-  api.decorateWidget('breadcrumb:after', (helper) => {
-    helper.widget.appEvents.on('page:changed', () => {
+  api.decorateWidget("breadcrumb:after", (helper) => {
+    helper.widget.appEvents.on("page:changed", () => {
       helper.widget.scheduleRerender();
     });
   });
 
-  api.createWidget('sub-nav-links-list', {
-    tagName: 'ul.nav-site.nav-site-internal',
+  api.createWidget("sub-nav-links-list", {
+    tagName: "ul.nav-site.nav-site-internal",
     html(attrs) {
       const { links } = attrs;
       const processedLinks = links.map((link) => {
         const classNames = [];
         const contents = () => link.title;
         if (linkCanBeActive(link, links) && isLinkActive(link)) {
-          classNames.push('siteNavItemActive');
+          classNames.push("siteNavItemActive");
         }
         return Object.assign({}, link, { classNames, contents });
       });
@@ -260,101 +280,108 @@
           const contents = link.contents;
           link.contents = () => [
             contents(),
-            h('span.desktop-sub-nav-toggle.trigger-open.mobile-hidden', [iconNode('chevron-down')]),
-            h('span.desktop-sub-nav-toggle.trigger-closed.mobile.mobile-hidden', [
-              iconNode('chevron-up'),
+            h("span.desktop-sub-nav-toggle.trigger-open.mobile-hidden", [
+              iconNode("chevron-down"),
             ]),
+            h(
+              "span.desktop-sub-nav-toggle.trigger-closed.mobile.mobile-hidden",
+              [iconNode("chevron-up")]
+            ),
           ];
-          link.classNames.push('desktop-sub-nav-toggle-container');
+          link.classNames.push("desktop-sub-nav-toggle-container");
         }
-        const linkContent = [this.attach('custom-link', link)];
+        const linkContent = [this.attach("custom-link", link)];
         if (link.subLinks && Array.isArray(link.subLinks)) {
           linkContent.push(
-            h('div.sub-sub-nav-links.mobile', [
-              h('div.nav-triangle.mobile-hidden'),
-              this.attach('sub-nav-links-list', { links: link.subLinks }),
-            ]),
+            h("div.sub-sub-nav-links.mobile", [
+              h("div.nav-triangle.mobile-hidden"),
+              this.attach("sub-nav-links-list", { links: link.subLinks }),
+            ])
           );
         }
-        return h('li', linkContent);
+        return h("li", linkContent);
       });
     },
   });
 
-  api.createWidget('sub-nav-links', {
-    tagName: 'div.mobile-hidden.navigationWrapper.navigationSlider',
+  api.createWidget("sub-nav-links", {
+    tagName: "div.mobile-hidden.navigationWrapper.navigationSlider",
     html() {
       const subNavLinks = getSubNavLinks();
-      return h('nav.slidingNav', [this.attach('sub-nav-links-list', { links: subNavLinks })]);
+      return h("nav.slidingNav", [
+        this.attach("sub-nav-links-list", { links: subNavLinks }),
+      ]);
     },
   });
 
-  api.decorateWidget('sub-nav-links:after', (helper) => {
-    helper.widget.appEvents.on('page:changed', () => {
+  api.decorateWidget("sub-nav-links:after", (helper) => {
+    helper.widget.appEvents.on("page:changed", () => {
       helper.widget.scheduleRerender();
     });
   });
 
-  api.createWidget('sub-nav-toggles', {
-    tagName: 'div.mobile',
-    buildKey: () => 'sub-nav-toggles',
+  api.createWidget("sub-nav-toggles", {
+    tagName: "div.mobile",
+    buildKey: () => "sub-nav-toggles",
     html() {
-      const openSrc = settings.theme_uploads && settings.theme_uploads['open-sub-nav-icon'];
-      const closeSrc = settings.theme_uploads && settings.theme_uploads['close-sub-nav-icon'];
+      const openSrc =
+        settings.theme_uploads && settings.theme_uploads["open-sub-nav-icon"];
+      const closeSrc =
+        settings.theme_uploads && settings.theme_uploads["close-sub-nav-icon"];
       return [
-        this.attach('sub-nav-trigger', {
-          classNames: ['trigger-open'],
-          img: { src: openSrc, alt: 'Open' },
-          altIcon: imageAsset('chevron-down', this),
+        this.attach("sub-nav-trigger", {
+          classNames: ["trigger-open"],
+          img: { src: openSrc, alt: "Open" },
+          altIcon: imageAsset("chevron-down", this),
         }),
-        this.attach('sub-nav-trigger', {
-          classNames: ['trigger-closed', 'mobile-hidden'],
-          img: { src: closeSrc, alt: 'Close' },
-          altIcon: imageAsset('chevron-pressed', this),
+        this.attach("sub-nav-trigger", {
+          classNames: ["trigger-closed", "mobile-hidden"],
+          img: { src: closeSrc, alt: "Close" },
+          altIcon: imageAsset("chevron-pressed", this),
         }),
       ];
     },
   });
 
-  api.createWidget('sub-nav', {
-    tagName: 'div#SubNav',
-    buildKey: () => 'sub-nav',
+  api.createWidget("sub-nav", {
+    tagName: "div#SubNav",
+    buildKey: () => "sub-nav",
     html(attr, state) {
-      return h('div.wrapper.wrap', [
-        h('div.sub-header', [
-          this.attach('breadcrumb'),
-          this.attach('sub-nav-links'),
-          this.attach('sub-nav-toggles'),
+      return h("div.wrapper.wrap", [
+        h("div.sub-header", [
+          this.attach("breadcrumb"),
+          this.attach("sub-nav-links"),
+          this.attach("sub-nav-toggles"),
         ]),
       ]);
     },
   });
 
-  api.createWidget('unified-nav', {
-    tagName: 'div#unified-nav',
-    buildKey: () => 'unified-nav',
+  api.createWidget("unified-nav", {
+    tagName: "div#unified-nav",
+    buildKey: () => "unified-nav",
     html(attrs, state) {
-      return h('header', [this.attach('main-nav'), this.attach('sub-nav')]);
+      return h("header", [this.attach("main-nav"), this.attach("sub-nav")]);
     },
   });
 
-  api.decorateWidget('unified-nav:after', (helper) => {
-    helper.widget.appEvents.on('page:changed', () => {
+  api.decorateWidget("unified-nav:after", (helper) => {
+    helper.widget.appEvents.on("page:changed", () => {
       helper.widget.scheduleRerender();
     });
   });
 
-  api.createWidget('nav-pusher', {
-    tagName: 'div.navPusher',
+  api.createWidget("nav-pusher", {
+    tagName: "div.navPusher",
     html() {
       return [];
     },
   });
 
-  api.createWidget('libra-discourse-custom-nav', {
-    tagName: 'div.libra-discourse-custom-nav',
+  api.createWidget("libra-discourse-custom-nav", {
+    tagName: "div.libra-discourse-custom-nav",
     html() {
-      return [this.attach('unified-nav'), this.attach('nav-pusher')];
+      return [this.attach("unified-nav"), this.attach("nav-pusher")];
     },
   });
 
@@ -363,14 +390,18 @@
   }
 
   function getSubNavLinks() {
-    return convertAndErrorCheckSettingsLinks(settings.sub_nav_links).filter((link) =>
-      !isCurrentUserMember() ? link.visibility === 'public' || link.visibility === 'both' : true,
+    return convertAndErrorCheckSettingsLinks(
+      settings.sub_nav_links
+    ).filter((link) =>
+      !isCurrentUserMember()
+        ? link.visibility === "public" || link.visibility === "both"
+        : true
     );
   }
 
   function convertAndErrorCheckSettingsLinks(links) {
     return links
-      .split('|')
+      .split("|")
       .map((link) => {
         try {
           return JSON.parse(link);
@@ -388,7 +419,7 @@
     ) {
       return (
         link.shouldIncludeInBreadcrumbOnPaths.filter((path) =>
-          new RegExp(path).test(window.location.pathname),
+          new RegExp(path).test(window.location.pathname)
         ).length > 0
       );
     }
@@ -427,7 +458,9 @@
 
   function isChildLinkCurrentPage(link) {
     return (
-      link.subLinks && Array.isArray(link.subLinks) && link.subLinks.filter(isLinkCurrentPage).length
+      link.subLinks &&
+      Array.isArray(link.subLinks) &&
+      link.subLinks.filter(isLinkCurrentPage).length
     );
   }
 
@@ -455,11 +488,15 @@
   function getBreadCrumb() {
     const links = flattenLinks(getSubNavLinks());
     return links.filter((link) => {
-      return !link.doNotIncludeInBreadcrumb && linkCanBeActive(link, links) && isLinkActive(link);
+      return (
+        !link.doNotIncludeInBreadcrumb &&
+        linkCanBeActive(link, links) &&
+        isLinkActive(link)
+      );
     });
   }
 
-  api.changeWidgetSetting('home-logo', 'href', 'https://libra.org/');
+  api.changeWidgetSetting("home-logo", "href", "https://libra.org/");
 </script>
 
 <script

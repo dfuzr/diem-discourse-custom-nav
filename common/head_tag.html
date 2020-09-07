@@ -1,12 +1,10 @@
-<script>
+<script type="text/discourse-plugin" version="0.10">
   const interceptClick = require("discourse/lib/intercept-click").default;
-  const { withPluginApi } = require("discourse/lib/plugin-api");
 
-  withPluginApi("0.10.2", function (api) {
-    api.onPageChange(() => {
-      positionDiscourseNavDesktop();
-    });
+  api.onPageChange(() => {
+    positionDiscourseNavDesktop();
   });
+
 
   $(document).ready(function () {
     addBackToTopClickFunctionality();
