@@ -7,10 +7,10 @@
     const groups = user.groups || [];
     // Use Discourse.SiteSettings instead of hard coded group name "members"
     const groupsWithAccessToMemberDirectory = [
-      Discourse.SiteSettings.libra_discourse_member_directory_group_name,
+      Discourse.SiteSettings.diem_discourse_member_directory_group_name,
       ...(
         Discourse.SiteSettings
-          .libra_discourse_member_directory_groups_with_member_directory_access ||
+          .diem_discourse_member_directory_groups_with_member_directory_access ||
         ""
       ).split("|"),
     ].filter(function (groupName) {
@@ -378,8 +378,8 @@
     },
   });
 
-  api.createWidget("libra-discourse-custom-nav", {
-    tagName: "div.libra-discourse-custom-nav",
+  api.createWidget("diem-discourse-custom-nav", {
+    tagName: "div.diem-discourse-custom-nav",
     html() {
       return [this.attach("unified-nav"), this.attach("nav-pusher")];
     },
@@ -501,7 +501,7 @@
 
 <script
   type="text/x-handlebars"
-  data-template-name="/connectors/above-site-header/libra-discourse-custom-nav"
+  data-template-name="/connectors/above-site-header/diem-discourse-custom-nav"
 >
-  {{mount-widget widget="libra-discourse-custom-nav"}}
+  {{mount-widget widget="diem-discourse-custom-nav"}}
 </script>

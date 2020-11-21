@@ -5,7 +5,7 @@
     "visibility": "public"
   },
   {
-    "title": "Libra Docs",
+    "title": "Diem Docs",
     "href": "https://developer.libra.org/docs/welcome-to-libra",
     "visibility": "public"
   },
@@ -28,13 +28,13 @@
     "visibility": "members",
     "shouldIncludeInBreadcrumbOnPaths": [
       "/c/node-operations",
-      "/libra-discourse-member-directory",
+      "/diem-discourse-member-directory",
       "/wg",
       "/working-groups",
       "/c/group-managment",
       "/c/group-management",
       "/c/policy-wg",
-      "/c/libraupgrade-wg",
+      "/c/diemupgrade-wg",
       "/c/off-chain-protocols-wg",
       "/c/communications-wg",
       "/c/mainnet-operations-wg"
@@ -53,7 +53,7 @@
       },
       {
         "title": "Directory",
-        "href": "/libra-discourse-member-directory",
+        "href": "/diem-discourse-member-directory",
         "visibility": "members"
       },
       {

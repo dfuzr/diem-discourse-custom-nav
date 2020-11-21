@@ -188,8 +188,10 @@
     }
 
     function closeSingleToggleNav(nav, navToggle, className, childClass = "") {
-      const icons = navToggle.querySelectorAll(childClass);
-      closeNav(nav, icons, className);
+      if (navToggle) {
+        const icons = navToggle.querySelectorAll(childClass);
+        closeNav(nav, icons, className);
+      }
     }
 
     function stopPropagation(nav) {

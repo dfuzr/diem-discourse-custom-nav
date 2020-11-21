@@ -1,3 +1,3 @@
-# libra-discourse-custom-nav
+# diem-discourse-custom-nav
 
 Custom navigation for members and non-members
