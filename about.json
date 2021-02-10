@@ -3,7 +3,7 @@
   "about_url": "",
   "component": true,
   "license_url": "",
-  "minimum_discourse_version": "2.3.0.beta9",
+  "minimum_discourse_version": "2.7.0.beta3",
   "assets": {
     "arrow-up": "assets/arrow-up.svg",
     "chevron-down": "assets/chevron-down.svg",

@@ -1,2 +1,800 @@
-@import 'lib/unified-nav';
-@import 'lib/discourse-nav';
+/*-------------------------------------------------
+******************* Breakpoints *******************
+-------------------------------------------------*/
+$large-breakpoint: 721;
+$desktop-breakpoint: 1024;
+
+/*-------------------------------------------------
+********************* Mixins **********************
+-------------------------------------------------*/
+
+/// Wrap large breakpoint content
+/// @example scss Input
+///   div {
+///     @include large {
+///        /* large breakpoint styles */
+///     }
+///   }
+@mixin large {
+  @media (min-width: $large-breakpoint * 1px) {
+    @content;
+  }
+}
+
+/// Wrap desktop breakpoint content
+/// @example scss Input
+///   div {
+///     @include desktop {
+///        /* desktop breakpoint styles */
+///     }
+///   }
+@mixin desktop {
+  @media (min-width: $desktop-breakpoint * 1px) {
+    @content;
+  }
+}
+
+/*-------------------------------------------------
+******************* Unified Nav *******************
+-------------------------------------------------*/
+
+@function image-urls() {
+  @return '{ "arrow-up" : "#{$arrow-up}", "chevron-down": "#{$chevron-down}", "chevron-pressed": "#{$chevron-pressed}", "close": "#{$close}", "ellipse-v": "#{$ellipse-v}", "white-paper": "#{$white-paper}"}';
+}
+// Add image assets to body so JS can access them
+body::before {
+  display: none;
+  content: image-urls();
+}
+
+$header-font-color: #39298c;
+
+.navPusher {
+  height: 120px;
+
+  @include desktop {
+    height: 140px;
+  }
+}
+
+#unified-nav {
+  background-color: #fff;
+  padding: 0;
+  min-height: 50px;
+  position: fixed;
+  top: 0;
+  top: env(safe-area-inset-top);
+  width: 100%;
+  z-index: 9999;
+
+  img {
+    border-style: none;
+    box-sizing: content-box;
+    max-width: 100%;
+  }
+  .pointer {
+    cursor: pointer;
+  }
+
+  span.fill {
+    width: 100%;
+    height: 100%;
+  }
+
+  .wrapper.wrap {
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 20px;
+    box-sizing: border-box;
+
+    @include desktop {
+      display: flex;
+    }
+  }
+
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .navigationWrapper.navigationSlider {
+    height: unset;
+    margin-top: 46px;
+
+    @include desktop {
+      margin-top: 0;
+    }
+  }
+
+  .navigationSlider .slidingNav {
+    bottom: auto;
+    box-sizing: border-box;
+    left: 0;
+    position: fixed;
+    right: 0;
+    margin-top: calc(0.4rem + 1px);
+
+    @include desktop {
+      margin-left: auto;
+      position: relative;
+      margin-top: 0;
+      border: none;
+
+      nav {
+        background: none;
+        height: auto;
+        position: relative;
+        right: auto;
+        top: auto;
+        width: auto;
+      }
+    }
+
+    ul {
+      margin: 0;
+      margin-bottom: 1em;
+      box-sizing: border-box;
+      color: #fff;
+      display: flex;
+      flex-wrap: nowrap;
+      list-style: none;
+      width: 100%;
+      background-color: #fff;
+      align-items: flex-start;
+      flex-direction: column;
+      margin-top: 0;
+      padding: 16px;
+      border-bottom: 1px solid #e5e5e5;
+
+      @include desktop {
+        border: none;
+        flex-direction: row;
+        align-items: center;
+        background-color: transparent;
+        margin-bottom: 0;
+        padding: 0;
+      }
+
+      li {
+        flex: 1 1 auto;
+        margin: 0;
+        text-align: center;
+        white-space: nowrap;
+
+        @include desktop {
+          margin-left: 18px;
+        }
+
+        a {
+          border: 0;
+          display: flex;
+          flex-flow: row nowrap;
+          z-index: 10000;
+          align-items: center;
+          box-sizing: border-box;
+          height: 50px;
+          justify-content: center;
+          margin: 0;
+          padding: 10px;
+          color: #414f64;
+          background-color: #fff;
+          transition: all 0.2s;
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 40px;
+
+          @include desktop {
+            color: $header-font-color;
+            line-height: 24px;
+            padding: 0.5em 1em;
+            font-size: 14px;
+          }
+
+          &:hover,
+          &.selected {
+            color: $header-font-color;
+            @include desktop {
+              text-decoration: underline;
+            }
+          }
+
+          &.highlight {
+            border-radius: 2.25rem;
+            vertical-align: middle;
+            display: inline-flex;
+            align-items: center;
+            background-color: #42318c;
+            color: #fff;
+            padding: 0.8em 1.8em;
+            text-shadow: 0.5px 0 0;
+            letter-spacing: 0.5px;
+            box-sizing: border-box;
+            min-height: 48px;
+            max-height: 48px;
+            line-height: 26px;
+            @include desktop {
+              display: inline-block !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .main-nav,
+  #SubNav {
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    height: 60px;
+    box-sizing: border-box;
+    position: relative;
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+
+  .main-nav {
+    background-color: #fff;
+    padding: 0.4rem 0;
+    z-index: 2;
+
+    @include desktop {
+      padding: 1rem 0;
+      height: 80px;
+    }
+
+    .main-nav-container {
+      display: flex;
+      justify-content: space-between;
+      flex: 1;
+
+      .logo-container {
+        flex: 1;
+        user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: $header-font-color;
+        .title {
+          img {
+            height: 21px;
+          }
+        }
+        @include desktop {
+          justify-content: flex-start;
+        }
+      }
+    }
+
+    .main-nav-trigger {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 10000;
+      height: 22px;
+      width: 22px;
+      cursor: pointer;
+      box-sizing: content-box;
+
+      &.trigger-open {
+        margin-left: -5px;
+      }
+      &.trigger-closed {
+        margin-left: -7px;
+        padding-right: 2px;
+
+        div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: rgb(243, 243, 243);
+          border-radius: 100%;
+          height: 22px;
+          width: 22px;
+          svg {
+            height: 65%;
+            margin-left: -1px;
+            margin-bottom: -1px;
+          }
+        }
+      }
+
+      > span {
+        height: 100%;
+      }
+
+      .fa.d-icon.d-icon-ellipsis-v.svg-icon {
+        margin-left: -1px;
+        height: 50%;
+      }
+    }
+
+    nav {
+      font-size: 14px;
+      border: 0 !important;
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    #back-to-top {
+      display: none;
+    }
+  }
+
+  #SubNav {
+    background-color: #f9f8f8;
+    color: #354052;
+    z-index: 1;
+
+    @include desktop {
+      height: 60px;
+    }
+
+    div.sub-header,
+    div.wrapper.wrap {
+      display: flex;
+      flex: 1;
+
+      @include desktop {
+        height: inherit;
+      }
+    }
+
+    div.sub-header {
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .breadcrumb {
+      display: flex;
+      flex-direction: column-reverse;
+
+      @include desktop {
+        flex-direction: row;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 23px;
+      }
+
+      .breadcrumb-item {
+        display: inline-block;
+        color: #5f7186;
+        font-size: 14px;
+        line-height: 14px;
+
+        &:not(:first-child) {
+          .mobile-hidden {
+            display: inline-block !important;
+          }
+        }
+        span {
+          margin-left: 7px;
+        }
+        &:first-child {
+          span {
+            margin: 0;
+          }
+        }
+
+        @include desktop {
+          display: inline-block !important;
+          &:first-child {
+            span {
+              margin-left: 7px;
+            }
+          }
+        }
+      }
+    }
+
+    .navigationSlider {
+      margin-top: 0;
+      .slidingNav {
+        margin-top: 30px;
+        @include desktop {
+          margin-top: 0;
+          height: inherit;
+          > ul {
+            height: inherit;
+          }
+        }
+
+        ul {
+          align-items: flex-start;
+          margin-top: 0;
+
+          li {
+            a {
+              background-color: transparent;
+              color: #000000;
+              font-size: 16px;
+              font-weight: 300;
+              line-height: 15px;
+              text-align: right;
+              height: 40px;
+
+              @include desktop {
+                font-size: 14px;
+                line-height: 15px;
+              }
+
+              .desktop-sub-nav-toggle svg {
+                color: inherit;
+                height: 12px;
+              }
+            }
+
+            a.siteNavItemActive,
+            a:hover {
+              color: $header-font-color;
+            }
+
+            a.siteNavItemActive {
+              @include desktop {
+                text-decoration: none;
+              }
+            }
+
+            &:not(:first-child) {
+              margin-left: 0px;
+            }
+
+            ul {
+              border-bottom: none;
+              padding: 0 1rem;
+              margin-bottom: 0;
+              flex-direction: column;
+            }
+
+            @include desktop {
+              position: relative;
+              margin-left: 0px;
+
+              .sub-sub-nav-links {
+                position: absolute;
+                top: 53px;
+                right: -50%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                div.nav-triangle {
+                  height: 15px;
+                  width: 15px;
+                  transform: rotate(45deg);
+                  border-radius: 1px;
+                  background-color: #ffffff;
+                  margin-bottom: -7.5px;
+                  position: relative;
+                  z-index: 99999;
+                }
+                ul {
+                  background-color: #fff;
+                  padding: 35px;
+                  padding-top: 20px;
+                  padding-right: 100px;
+                  box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.2);
+                  border-radius: 5px;
+                  width: unset;
+                  li {
+                    height: 29px;
+                    line-height: 29px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include desktop {
+    .mobile-hidden {
+      display: unset !important;
+    }
+    .mobile {
+      display: none !important;
+    }
+  }
+}
+
+.modal-backdrop {
+  z-index: 9999;
+}
+
+#reply-control,
+.bootbox.modal,
+.fixed-modal {
+  z-index: 10000;
+}
+
+/*-------------------------------------------------
+************** Discourse Floating Nav *************
+-------------------------------------------------*/
+
+$mobile-avatar-image-size: 1.8em;
+$desktop-avatar-image-size: 2.1em;
+
+.drop-down-mode .d-header-icons .active .icon::after {
+  top: -1px;
+}
+
+.menu-open .d-header {
+  z-index: 1;
+}
+
+.d-header {
+  font-size: 12px;
+  position: fixed;
+  margin: 0;
+  height: 0;
+  z-index: 9999;
+  top: 0;
+
+  @include desktop {
+    display: flex;
+    justify-content: center;
+    z-index: 999;
+  }
+
+  .wrap {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: env(safe-area-inset-bottom);
+    background-color: $header-background;
+    border-top: 1px solid #e5e5e5;
+    height: 40px;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+
+    @include desktop {
+      max-width: 1400px;
+    }
+
+    .contents {
+      max-width: 1110px;
+      width: 100%;
+      @include desktop {
+        width: unset;
+        position: absolute;
+        top: 180px;
+        &.with-staff-banner,
+        &.with-banner {
+          top: 233px;
+        }
+        &.with-banner.with-staff-banner {
+          top: 284px;
+        }
+      }
+      .extra-info-wrapper {
+        display: none;
+        + .panel .d-header-icons {
+          display: block;
+        }
+      }
+    }
+
+    .title {
+      #back-to-top {
+        color: $header-primary;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        .arrow-up-icon {
+          margin-left: 6px;
+        }
+        @include desktop {
+          display: none;
+        }
+      }
+
+      a {
+        display: none;
+      }
+    }
+  }
+
+  .menu-panel.slide-in,
+  .menu-panel {
+    top: unset !important;
+    bottom: 40px;
+    box-shadow: 0 -12px 12px rgba(0, 0, 0, 0.15);
+
+    @include desktop {
+      bottom: unset;
+      top: 100% !important;
+      box-shadow: 0 12px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .panel-body {
+      height: 100% !important;
+    }
+  }
+
+  .d-header-icons {
+    .active .icon {
+      position: relative;
+      background-color: #fff;
+      cursor: default;
+      border-top: 1px solid #e6e6e6;
+      border-left: 1px solid #e6e6e6;
+      border-right: 1px solid #e6e6e6;
+      &::after {
+        display: block;
+        position: absolute;
+        top: -2px;
+        left: 0;
+        z-index: 1001;
+        width: 100%;
+        height: 0;
+        content: '';
+        border-top: 2px solid #fff;
+        @include desktop {
+          top: 100%;
+        }
+      }
+    }
+  }
+
+  .panel {
+    flex: 1 1 auto;
+    margin-left: 0;
+    justify-content: flex-end;
+    @include desktop {
+      background-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 2px 2px 40px 10px rgba(0, 0, 0, 0.05);
+      font-size: 15px;
+    }
+  }
+
+  .header-buttons:not(:empty) {
+    margin: 0;
+    margin-left: 6px;
+    justify-content: flex-end;
+
+    .btn-primary {
+      @include desktop {
+        background: none;
+        color: $header-primary;
+        font-size: 15px;
+        padding: 6px;
+        // margin: 0;
+        > span {
+          font-size: inherit;
+        }
+        > svg {
+          color: inherit;
+        }
+      }
+    }
+  }
+
+  .header-buttons {
+    button.sign-up-button,
+    button.login-button {
+      display: block;
+      span {
+        font-size: 0.6rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.d-header-icons .d-icon {
+  color: $header-primary;
+  font-size: 12px;
+  @include desktop {
+    font-size: 16px;
+  }
+}
+
+.d-header-icons {
+  @include desktop {
+    margin: 0;
+  }
+  flex: 0 0 auto;
+  .icon {
+    width: 34px;
+    box-sizing: border-box;
+    padding: 0;
+    height: 42px;
+    @include desktop {
+      width: 40px;
+      height: 35px;
+    }
+    img.avatar {
+      height: $mobile-avatar-image-size;
+      width: $mobile-avatar-image-size;
+      @include desktop {
+        height: $desktop-avatar-image-size;
+        width: $desktop-avatar-image-size;
+      }
+    }
+  }
+}
+
+@include desktop {
+  .d-header {
+    .wrap {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      border: none;
+    }
+    > .wrap {
+      max-width: 1125px;
+    }
+  }
+  .category-member-portal {
+    .d-header > .wrap {
+      max-width: 1202px;
+    }
+  }
+}
+
+// Updates to Member-portal due to footer nav
+
+.member-portal-homepage {
+  margin-bottom: calc(4em + 40px);
+  @include large {
+    margin-bottom: calc(8em + 40px);
+  }
+  @include desktop {
+    margin-bottom: 8em;
+  }
+}
+
+.category-member-portal footer {
+  margin-bottom: 40px;
+  @include desktop {
+    margin-bottom: 0;
+  }
+}
+
+// Adjusting other parts of the page that need to be moved because they interfere with the floating
+// discourse nav on desktop
+@include desktop {
+  .alert.alert-info {
+    margin-top: 0px;
+  }
+  .list-controls,
+  .user-main .about.collapsed-info .controls {
+    margin-right: 136px;
+  }
+
+  .category-header .list-controls {
+    margin-right: 0px;
+  }
+
+  .user-main .about.collapsed-info .controls {
+    margin-top: 0px;
+  }
+  .user-main .about .controls {
+    margin-top: 35px;
+  }
+
+  .group-details-button {
+    top: unset;
+    bottom: 20px;
+  }
+  .groups-header,
+  .users-page .directory .filter-name {
+    margin-right: 130px;
+  }
+}
