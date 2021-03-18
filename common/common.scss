@@ -41,7 +41,7 @@ $desktop-breakpoint: 1024;
 @function image-urls() {
   @return '{ "arrow-up" : "#{$arrow-up}", "chevron-down": "#{$chevron-down}", "chevron-pressed": "#{$chevron-pressed}", "close": "#{$close}", "ellipse-v": "#{$ellipse-v}", "white-paper": "#{$white-paper}"}';
 }
-// Add image assets to body so JS can access them
+// Add image assets to body so JS can access them and use those urls to display them in the nav where needed
 body::before {
   display: none;
   content: image-urls();
@@ -642,7 +642,7 @@ $desktop-avatar-image-size: 2.1em;
         z-index: 1001;
         width: 100%;
         height: 0;
-        content: '';
+        content: "";
         border-top: 2px solid #fff;
         @include desktop {
           top: 100%;

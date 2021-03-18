@@ -11,6 +11,8 @@
     positionDiscourseNavDesktop();
   });
 
+  /* in mobile version of discourse menu, there is a sticky menu on the bottom of the page.
+  There is a "Back ot top" button that will scroll the user to the top when clicked */
   function addBackToTopClickFunctionality() {
     const backToTop = $(".d-header #back-to-top");
     backToTop.on("click", function (event) {
@@ -18,6 +20,8 @@
     });
   }
 
+  /* Positions the discourse menu (user icon, discourse menu, admin menu if user is admin, etc)
+  on desktop devices depending on whether or not there are alert banners from Discourse */
   function positionDiscourseNavDesktop() {
     const $staffBanner = $(".user-main .staff-counters");
     const $alertBanner = $(".alert.alert-info");

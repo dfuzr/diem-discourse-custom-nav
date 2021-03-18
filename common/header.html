@@ -103,6 +103,11 @@
     ]);
   });
   /* -------------------------------------- */
+  /*
+    --------------------------------------
+          Mobile Discourse Nav - Top-right icon
+    --------------------------------------
+  */
 
   api.createWidget("top-right-mobile-link", {
     tagName: "div.mobile.link-image",
@@ -128,6 +133,13 @@
       return links.map((link) => this.attach("top-right-mobile-link", link));
     },
   });
+  /* -------------------------------------- */
+
+  /*
+  --------------------------------------
+        Mobile Discourse Nav - menu triggers
+  --------------------------------------
+  */
 
   api.createWidget("main-nav-trigger", {
     tagName: "div.mobile.main-nav-trigger.pointer",
@@ -160,7 +172,12 @@
           : "";
     },
   });
-
+  /* -------------------------------------- */
+  /*
+  --------------------------------------
+        Mobile Discourse Nav - menu toggles
+  --------------------------------------
+  */
   api.createWidget("main-nav-toggles", {
     tagName: "div.mobile",
     buildKey: () => "main-nav-toggles",
@@ -183,7 +200,7 @@
       ];
     },
   });
-
+  /* -------------------------------------- */
   api.createWidget("logo-container", {
     tagName: "div.logo-container",
     buildKey: () => "logo-container",
@@ -195,7 +212,11 @@
       ];
     },
   });
-
+  /*
+  --------------------------------------
+        Mobile Discourse Nav - Links
+  --------------------------------------
+  */
   api.createWidget("main-nav-links", {
     tagName: "div.navigationWrapper.navigationSlider.mobile-hidden",
     buildKey: () => "main-nav-links",
@@ -222,6 +243,7 @@
       ]);
     },
   });
+  /* -------------------------------------- */
 
   api.createWidget("main-nav", {
     tagName: "div.main-nav",
@@ -235,7 +257,11 @@
       ]);
     },
   });
-
+  /*
+  --------------------------------------
+        Mobile Discourse Nav - Breadcrumb
+  --------------------------------------
+  */
   api.createWidget("breadcrumbItem", {
     tagName: "div.breadcrumb-item",
     html({ link }) {
@@ -262,7 +288,12 @@
       helper.widget.scheduleRerender();
     });
   });
-
+  /* -------------------------------------- */
+  /*
+  --------------------------------------
+        Mobile Discourse Nav - Subnav
+  --------------------------------------
+  */
   api.createWidget("sub-nav-links-list", {
     tagName: "ul.nav-site.nav-site-internal",
     html(attrs) {
@@ -356,7 +387,7 @@
       ]);
     },
   });
-
+  /* -------------------------------------- */
   api.createWidget("unified-nav", {
     tagName: "div#unified-nav",
     buildKey: () => "unified-nav",
@@ -384,6 +415,10 @@
       return [this.attach("unified-nav"), this.attach("nav-pusher")];
     },
   });
+
+  /*
+      Util functions
+  */
 
   function getMainNavLinks() {
     return convertAndErrorCheckSettingsLinks(settings.main_nav_links);
