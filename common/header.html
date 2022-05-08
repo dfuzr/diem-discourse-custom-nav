@@ -5,11 +5,12 @@
   function isCurrentUserMember() {
     const user = api.getCurrentUser() || {};
     const groups = user.groups || [];
-    // Use Discourse.SiteSettings instead of hard coded group name "members"
+    const siteSettings = api.container.lookup("site-settings:main");
+
     const groupsWithAccessToMemberDirectory = [
-      Discourse.SiteSettings.diem_discourse_member_directory_group_name,
+      siteSettings.diem_discourse_member_directory_group_name,
       ...(
-        Discourse.SiteSettings
+        siteSettings
           .diem_discourse_member_directory_groups_with_member_directory_access ||
         ""
       ).split("|"),
